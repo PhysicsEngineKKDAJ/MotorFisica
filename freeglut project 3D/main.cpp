@@ -1,4 +1,3 @@
-//INCLUDES
 #include "stdafx.h"
 #include "Physics_Functions.h"
 #include <stdio.h>
@@ -7,124 +6,60 @@
 #include <time.h>
 #include <GL/freeglut.h>
 
-//OBJETOS
+//--------------CAMARA-------------
 
-//VALORES NUMÉRICOS
-int downX, downY;
-float lightx = 1, lighty = 1, lightz = 1;
+//N Y F son 0 por el gluPerspective
+GLdouble xRight = 0, xLeft = 800, yTop = 600, yBot = 0, N = 0, F = 0;
+int WIDTH = 800, HEIGHT = 600;
+
+//Movimiento de la cámara
+int downX, downY;//Movimiento
 float sphi = 30.0, stheta = -30.0, sheight = 0, shor = 0;
 float sdepth = 20;
 
-//BOOLS
-bool leftButton = false, middleButton = false, rightButton = false; //RATON
-bool FlechaIz = false;
-bool FlechaDer = false;
+//--------------CAMARA-------------
+
+//-------------LUZ---------------
+
+GLfloat lightPos[] = { 1, 1, 1, 0.0 };
+
+//-------------LUZ---------------
+
+//---------------CONTROLES---------------------
+
+//RATON
+bool leftButton = false, middleButton = false, rightButton = false; 
+
+//Teclas
+bool leftArrow = false, rightArrow = false;
+
+//---------------CONTROLES---------------------
+
 bool paused = true;
+//HAY QUE USARLO
+//int contEscena;
+//Escena*escena;
 
-//Métodos
-void Render();
-void Idle();
-void mouse(int button, int state, int x, int y);
-void motion(int x, int y);
-void SpecialKey(int k, int x, int y);
-
-//VECTORES DE COSAs
+//ESTA MIERDA HAY QUE QUITARLA DE AQUÍ
 vector<vector<Vector3d>> positions(PARTICLE_C);
 vector<vector<Vector3d>> p_positions(POINT_PARTICLE_C);
 
-//Acceleration caused by particles in P on ip
-Vector3d acceleration(State ip, vector<Particle3d> P, float t)
-{
-	Vector3d ACCELERATION;                      //Aceleración
-	Vector3d tempAcceleration;                  //Aceleración temportal
-
-	//Por cada particula, halla algo y luego suma una aceleración temporal a una aceleración
-	for (int i = 0; i<PARTICLE_C; i++)
-	{
-		if (ip.i = !i){
-
-			//Cálculos del cuadrado de algo
-			real d = sqrt((ip.Position.x - P[i].position.x)*(ip.Position.x - P[i].position.x) +
-				(ip.Position.y - P[i].position.y)*(ip.Position.y - P[i].position.y) +
-				(ip.Position.z - P[i].position.z)*(ip.Position.z - P[i].position.z)
-				);
-
-			real f = -6.67384*0.000000180 * 10 * ip.mass*P[i].mass / (d*d); //Constante bastante interesante
-
-			//ACUMULA LAS ACELERACIONES, DE LA QUE LLEVA MAS LA TEMPORAL
-			tempAcceleration.Set((ip.Position.x - P[i].position.x)*f / d / ip.mass, (ip.Position.y - P[i].position.y)*f / d / ip.mass,
-				(ip.Position.z - P[i].position.z)*f / d / ip.mass);
-			ACCELERATION += tempAcceleration;//accumulate accerleations
-		}
-	}
-
-	return ACCELERATION;
-}
-
-//Hace la derivada de algo ahí to guapo
-Derivative evaluate(int ip, vector<Particle3d> P, float t)
-{
-	Derivative output;
-	output.dPosition = P[ip].velocity;
-
-	output.dVelocity = acceleration(P3dToState(P[ip]), P, t);
-	return output;
-}
-
-//Hace la derivada de algo ahi to guapo basandose en la posicion y velocidad de otra derivada
-//Segunda derivada??
-Derivative evaluate(int ip, vector<Particle3d> P, float t, float dt, Derivative &d)
-{
-	State state1;
-
-	Derivative output;
-	state1.i = ip;
-	state1.mass = P[ip].mass;
-	state1.Position = P[ip].position + d.dPosition*dt;// dp/dt= velocity
-	state1.Velocity = P[ip].velocity + d.dVelocity*dt;//p''=dv/dt= acceleration
-
-	output.dPosition = state1.Velocity;
-
-	output.dVelocity = acceleration(state1, P, t + dt);
-
-	return output;
-}
-
-//Integra y tal
-void integrate(int ip, vector<Particle3d> P, float t, float dt)
-{
-	Derivative k1 = evaluate(ip, P, t);
-	Derivative k2 = evaluate(ip, P, t, dt*0.5f, k1);
-	Derivative k3 = evaluate(ip, P, t, dt*0.5f, k2);
-	Derivative k4 = evaluate(ip, P, t, dt, k3);
-
-	Vector3d dPOSITION;
-	Vector3d dVELOCITY;
-
-	dPOSITION = 1.0f / 6.0f*(k1.dPosition + 2.0f*(k2.dPosition + k3.dPosition) + k4.dPosition);
-	dVELOCITY = 1.0f / 6.0f*(k1.dVelocity + 2.0f*(k2.dVelocity + k3.dVelocity) + k4.dVelocity);
-
-	p3d_states[ip].Position += dPOSITION*dt;
-	p3d_states[ip].Velocity += dVELOCITY*dt;
-	p3d_states[ip].Acceleration = dVELOCITY*dt;
-}
-
+//Dibuja los ejes de coordenadas
 void dibujaEjes(){
-	glLineWidth(2.5);
-	glPointSize(5);
+	glLineWidth(1.5f);
 	// Drawing axes
 	glBegin(GL_LINES);
 	glColor3f(1.0, 0.0, 0.0);
 	glVertex3f(0, 0, 0);
-	glVertex3f(1, 0, 0);
+	glVertex3f(5, 0, 0);
 
 	glColor3f(0.0, 1.0, 0.0);
 	glVertex3f(0, 0, 0);
-	glVertex3f(0, 1, 0);
+	glVertex3f(0, 5, 0);
 
 	glColor3f(0.0, 0.0, 1.0);
 	glVertex3f(0, 0, 0);
-	glVertex3f(0, 0, 1);
+	glVertex3f(0, 0, 5);
 	glEnd();
 
 }
@@ -133,6 +68,9 @@ void dibujaEjes(){
 void buildSceneObjects()
 {
 	//escena = new Escena(4000);
+	//contEscena = 0;
+
+	//TODO LO QUE HAY A PARTIR DE AQUÍ DEBERÍA ESTAR EN LA CONSTRUCTORA DE ESCENA
 
 	InitP3d(particles.data(), PARTICLE_C, p3d_id);
 	InitP3d(point_particles.data(), POINT_PARTICLE_C, p3d_id);
@@ -206,35 +144,34 @@ void buildSceneObjects()
 	for (int i = 0; i<PARTICLE_C; i++)
 		cout << i << " m: " << particles[i].mass << ":\n vx= " << particles[i].velocity.x << ", vy= " << particles[i].velocity.y << ", vz= " << particles[i].velocity.z << endl;
 
-	//contEscena = 0;
 }
 
 //INIT DE OPENGL
+//Igual que en IG excepto por la cámara
 void InitGL()
 {
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 
-	GLfloat mat_specular[] = { 0.20, 0.250, .250, .250 };
-	GLfloat mat_shininess[] = { 40.0 };
+	//-----------SHADERS-------------
+	glEnable(GL_COLOR_MATERIAL);
+	glMaterialf(GL_FRONT, GL_SHININESS, 0.9f);
 
-	//glEnable(GL_COLOR_MATERIAL);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_NORMALIZE);
+	glEnable(GL_NORMALIZE);
 
 	//Define el modelo de sombreado: GL_FLAT / GL_SMOOTH (suave)
-	glShadeModel(GL_SMOOTH);
+	glShadeModel(GL_SMOOTH);// Shading by default
+	//-----------SHADERS-------------
 
 	buildSceneObjects();
 
+	//--------------LUZ-------------
 	//Activa el modelo de iluminación /disable
 	glEnable(GL_LIGHTING);
 
 	//Enciende una luz particular /disable
 	glEnable(GL_LIGHT0);
 
-	/*
 	//Definir componentes difusa, especular y ambiente
 	GLfloat d[] = { 0.7f, 0.5f, 0.5f, 1.0f };
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, d);//Luz que vuelve a irradiar la superficie en todas las direcciones.
@@ -242,50 +179,35 @@ void InitGL()
 	glLightfv(GL_LIGHT0, GL_AMBIENT, a);//Luz que alcanza una superficie aunque no esté expuesta a la fuente de luz.
 	GLfloat s[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	glLightfv(GL_LIGHT0, GL_SPECULAR, s);//Luz que refleja la superficie.
-	GLfloat p[] = { 25.0f, 25.0f, 25.0f, 1.0f };
-	glLightfv(GL_LIGHT0, GL_POSITION, p);//Define la posicion de una fuente de luz. ultimo parámetro: 1 local, 0 direccional
-	*/
-
+	//GLfloat p[] = { 25.0f, 25.0f, 25.0f, 1.0f };
+	//glLightfv(GL_LIGHT0, GL_POSITION, p);//Define la posicion de una fuente de luz. ultimo parámetro: 1 local, 0 direccional
+	
+	//luz ambiente
 	/*
-	// Camera set up
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	gluLookAt(eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
-
-	// Frustum set up
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glFrustum(xLeft, xRight, yBot, yTop, N, F);
-	//glOrtho(xLeft, xRight, yBot, yTop, N, F);
-
-	// Viewport set up
-	glViewport(0, 0, WIDTH, HEIGHT);
+	GLfloat amb[] = { 0.0, 0.0, 0.0, 1.0 };
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, amb);
 	*/
+	//--------------LUZ-------------
 
-	glEnable(GL_BLEND);
-	glShadeModel(GL_SMOOTH);
-	glDepthFunc(GL_LEQUAL);
-	//glOrtho(-1,1,1,-1,-2,2);
-	//glEnable          (GL_BLEND);
-	//glBlendFunc           (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//glHint            (GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+	//-------------CAMARA-----------
+	/*
+		Hacer el setup igual que en IG lo rompe por el movimiento con el ratón,
+		lo dejamos tal como está
+	*/
+	//-------------CAMARA-----------
 
-	// glutFullScreen      ( );  
 }
 
-//VARIABLES HUERFANAS
 real deltat = 1000;					//Se usa en lo de integrar
-//SE USAN
 float fac = 0;
 int ifac = 0;
 
-//Más variables huerfanas :(
 //Se usan para debug
 float r = 0;                     //NO SE USA
 float tp = 0.0;                           //Se va sumando en el render
 
-//RENDER
-void Render()
+//Dibuja
+void display()
 {
 	glEnable(GL_LIGHTING);
 	//glClear(GL_COLOR_BUFFER_BIT);
@@ -303,7 +225,7 @@ void Render()
 	//Otro puto tiempo
 	static int t = clock();
 
-	if (FlechaDer)
+	if (rightArrow)
 	{
 		//Constante que usas en la gravitacion universal
 		real G = 6.67384*0.00080;
@@ -316,7 +238,7 @@ void Render()
 	}
 
 	//?????
-	if (FlechaIz)
+	if (leftArrow)
 	{
 		for (int i = 0; i < PARTICLE_C; i++)//Calcula la gravedad direccional de cada una de las particulas
 			DirectionalGravity(i, particles.data(), PARTICLE_C, p3d_states[i], 1.0 / deltat);
@@ -333,9 +255,8 @@ void Render()
 		DrawParticle3d(particles[i]);
 	
 	glDisable(GL_LIGHTING);
-	GLfloat light_position[] = { lightx, lighty, lightz, 0.0 };
 
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
 
 	SetColor(GREEN);
 
@@ -441,55 +362,12 @@ void Render()
 	glFlush();
 	glutSwapBuffers();
 
-	//glutPostRedisplay();
-}
-
-//PA ESO PONLO EN EL RENDER
-void Idle()
-{
 	glutPostRedisplay();
 }
 
-//Movimiento de la camara
-void motion(int x, int y)
-{
-	static int temp_x = x, temp_y = y;
-	static float margin = 0.05;
 
-	if (leftButton)
-	{
-		sphi += (float)(x - downX) / 4.0;
-		stheta += (float)(downY - y) / 4.0;
-	}
-	if (rightButton){
-		if (sdepth <= 2 && sdepth >= -2)
-			sdepth += (float)(downY - y);
-
-		else sdepth += (float)(downY - y)*(abs(sdepth)) / 50.0;
-		//cout<<sdepth<<": "<<downY<<" - "<<y<<endl;
-
-	} // scale
-
-
-	if (middleButton)
-	{
-		sheight += (float)(downY - y)*(abs(sdepth)) / 120.0;
-		shor += (float)(downX - x)*(abs(sdepth)) / 120.0;
-	}
-
-	downX = x;   downY = y;
-}
-
-//Resize
-void reshape(int newWidth, int newHeight) {
-	glViewport(0, 0, (GLsizei)newWidth, (GLsizei)newWidth);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0, 800, 0, 600, 0, 0);
-	gluPerspective(60, (GLfloat)newWidth / (GLfloat)newWidth, 1.0, 100000000000.0);
-	glMatrixMode(GL_MODELVIEW);
-
-	/* CON ESTA MIERDA ARREGLARIAMOS EL RESIZE PARA 
+//Igual que en IG excepto por el gluPerspective, permite alejar la camara con el raton
+void resize(int newWidth, int newHeight) {
 	WIDTH = newWidth;
 	HEIGHT = newHeight;
 	GLdouble RatioViewPort = (float)WIDTH / (float)HEIGHT;
@@ -514,11 +392,14 @@ void reshape(int newWidth, int newHeight) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(xLeft, xRight, yBot, yTop, N, F);
-	*/
+
+	//Funcion nueva para que funcione lo de alejar la camara
+	gluPerspective(60, RatioViewPort, 1.0, 100000000000.0);
 }
 
 //---------------------------CONTROLES--------------------------------
 
+//Se le llama con la pulsación del ratón
 void mouse(int button, int state, int x, int y)
 {
 	downX = x; downY = y;
@@ -529,6 +410,38 @@ void mouse(int button, int state, int x, int y)
 	rightButton = ((button == GLUT_RIGHT_BUTTON) && (state == GLUT_DOWN));
 }
 
+//Se le llama si se mantiene una tecla (botones del raton)
+//Movimiento de la camara 
+void motion(int x, int y)
+{
+	//Rota la cámara respecto al centro
+	if (leftButton)
+	{
+		sphi += (float)(x - downX) / 4.0;
+		stheta += (float)(downY - y) / 4.0;
+	}
+
+	//Aleja o acerca la cámara
+	if (rightButton)
+	{
+		if (sdepth <= 2 && sdepth >= -2)
+			sdepth += (float)(downY - y);
+
+		else
+			sdepth += (float)(downY - y)*(abs(sdepth)) / 50.0;
+	}
+
+	//Permite mover la cámara en el plano
+	if (middleButton)
+	{
+		sheight += (float)(downY - y)*(abs(sdepth)) / 120.0;
+		shor += (float)(downX - x)*(abs(sdepth)) / 120.0;
+	}
+
+	downX = x;   downY = y;
+}
+
+//Teclas normales
 void key(unsigned char key, int x, int y){
 	bool need_redisplay = true;
 	switch (key) {
@@ -539,6 +452,15 @@ void key(unsigned char key, int x, int y){
 		break;
 
 		//case '3': contEscena++; contEscena %= 2; break;//Rota la cámara alrededor del ejeX
+
+	//Permiten mover la altura de la luz
+	case 'w': 
+		lightPos[1] += 0.1;
+		break;
+	case 's':
+		lightPos[1] -= 0.1;
+		break;
+
 	default:
 		need_redisplay = false;
 		break;
@@ -548,32 +470,26 @@ void key(unsigned char key, int x, int y){
 		glutPostRedisplay();
 }
 
-void SpecialKey(int k, int x, int y)
+//Flechas direccionales
+void SpecialKey(int key, int x, int y)
 {
-	switch (k)
+	switch (key)
 	{
 	case GLUT_KEY_UP:
-
-		//lighty+=0.1;
-		if (paused)
-			paused = false;
-		else
-			paused = true;
+		paused = !paused;
 		break;
 
-		//BAJA LA POS DE LA LUZ
+		//Baja la posición de la luz
 	case GLUT_KEY_DOWN:
-		lighty -= 0.1;
 
 		break;
 
 	case GLUT_KEY_RIGHT:
-		FlechaDer = !FlechaDer;
+		rightArrow = !rightArrow;
 		break;
 
 	case GLUT_KEY_LEFT:
-		//lightz-=0.1;
-		FlechaIz = !FlechaIz;
+		leftArrow = !leftArrow;
 		break;
 	}
 }
@@ -581,7 +497,7 @@ void SpecialKey(int k, int x, int y)
 //---------------------------CONTROLES--------------------------------
 
 // ----------------------------------- MAIN -------------------------------------
-int _tmain(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
 	cout << "Starting console..." << endl;
 	srand(time(0));
@@ -589,7 +505,7 @@ int _tmain(int argc, char* argv[])
 	int my_window; // my window's identifier
 
 	// Initialization
-	glutInitWindowSize(800, 600);
+	glutInitWindowSize(WIDTH, HEIGHT);
 	glutInitWindowPosition(420, 60);
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
@@ -600,17 +516,12 @@ int _tmain(int argc, char* argv[])
 	my_window = glutCreateWindow("Physics Engine");
 
 	//CALLBACK REGISTRATION
-	//glutMotionFunc(motion);
-	//glutMouseFunc(mouse);
-	//glutPassiveMotionFunc(passive);
 	glutMotionFunc(motion);
-	glutDisplayFunc(Render);
-	glutReshapeFunc(reshape);
+	glutDisplayFunc(display);
+	glutReshapeFunc(resize);
 	glutMouseFunc(mouse);
 	glutSpecialFunc(SpecialKey);
 	glutKeyboardFunc(key);
-	// glutSpecialFunc     ( arrow_keys );
-	glutIdleFunc(Idle);
 
 	InitGL();
 
@@ -626,4 +537,5 @@ int _tmain(int argc, char* argv[])
 
 	return 0;
 }
-//-----------------------------------------------------------------------
+// ----------------------------------- MAIN -------------------------------------
+

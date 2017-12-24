@@ -113,6 +113,7 @@ void DrawParticle3d(Particle3d &p)
 	glPushMatrix();
 	//glLoadIdentity();
 	glTranslatef(p.position.x, p.position.y, p.position.z);
+	SetColor(G75);
 
 	glutSolidSphere(p.radius, 40, 40);
 	//cout<<"drawing at x:"<<p.position.x<<", y: "<<p.position.y<<", z:"<< p.position.z<<endl;;

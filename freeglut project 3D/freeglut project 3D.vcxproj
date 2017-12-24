@@ -66,7 +66,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CelestialBodies.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Help_Functions.cpp" />
     <ClCompile Include="Physics_Functions.cpp" />
     <ClCompile Include="Primitives.cpp" />
