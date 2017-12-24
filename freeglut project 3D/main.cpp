@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "Includes.h"
 #include "Physics_Functions.h"
 #include <stdio.h>
 #include <math.h>
@@ -41,8 +41,8 @@ bool paused = true;
 //Escena*escena;
 
 //ESTA MIERDA HAY QUE QUITARLA DE AQUÍ
-vector<vector<Vector3d>> positions(PARTICLE_C);
-vector<vector<Vector3d>> p_positions(POINT_PARTICLE_C);
+//Este vector guarda todas las posiciones antiguas de cada particula
+vector<vector<Vector3d>> posParticulas(NumParticulas);
 
 //Dibuja los ejes de coordenadas
 void dibujaEjes(){
@@ -72,12 +72,18 @@ void buildSceneObjects()
 
 	//TODO LO QUE HAY A PARTIR DE AQUÍ DEBERÍA ESTAR EN LA CONSTRUCTORA DE ESCENA
 
-	InitP3d(particles.data(), PARTICLE_C, p3d_id);
-	InitP3d(point_particles.data(), POINT_PARTICLE_C, p3d_id);
+	//Da un ID a todas las particulas
+	InitParticles(particulas, NumParticulas, Preset_id);
 
-	InitP3d(particles.data(), PARTICLE_C, p3d_random_m);
+	//Da un ID a todas las estrellas
+	InitParticles(estrellas, NumEstrellas, Preset_id);
 
+	//Crea todas las partículas con una masa aleatoria
+	InitParticles(particulas, NumParticulas, Preset_random_m);
+
+	
 	//EL CHOQUECITO
+	/*
 	for (int i = 0; i < 5; i++)
 	{
 		for (int j = 0; j < 5; j++)
@@ -85,65 +91,62 @@ void buildSceneObjects()
 			for (int k = 0; k < 5; k++)
 			{
 
-				particles[i * 25 + j*5 + k].position.Set(i * 3, j * 3,k*3);
-				particles[i * 25 + j * 5 + k].velocity.Set(0, 0, 0);
-				particles[i * 25 + j * 5 + k].mass = 5000 + i * 25 + j*5 + k;
-				particles[i * 25 + j * 5 + k].radius = 1;
+				particulas[i * 25 + j*5 + k].position.Set(i * 3, j * 3,k*3);
+				particulas[i * 25 + j * 5 + k].velocity.Set(0, 0, 0);
+				particulas[i * 25 + j * 5 + k].mass = 5000 + i * 25 + j*5 + k;
+				particulas[i * 25 + j * 5 + k].radius = 1;
 			}
 		}
 
 	}
 
-	particles[0].position.Set(5, 5, 100);
-	particles[0].velocity.Set(0, 0, -1000);
-	particles[0].mass = 1000000;
-	particles[0].radius = 10;
+	particulas[0].position.Set(5, 5, 100);
+	particulas[0].velocity.Set(0, 0, -1000);
+	particulas[0].mass = 1000000;
+	particulas[0].radius = 10;
+	*/
 	/*PLANETAS ORBITANDO
 	//test:
-	particles[0].mass=1000000000;
-	particles[0].radius = 20;
-	particles[0].position.Set(0, 0, 0);
+	particulas[0].mass=1000000000;
+	particulas[0].radius = 20;
+	particulas[0].position.Set(0, 0, 0);
 	
-	particles[1].position.Set(200, 0, 0);
-	particles[1].velocity.Set(0, 0, 150);
-	particles[1].mass = 10000;
-	particles[1].radius = 5;
+	particulas[1].position.Set(200, 0, 0);
+	particulas[1].velocity.Set(0, 0, 150);
+	particulas[1].mass = 10000;
+	particulas[1].radius = 5;
 
-	particles[2].position.Set(0, 0, 100);
-	particles[2].velocity.Set(220, 0, 0);
-	particles[2].mass = 100;
-	particles[2].radius= 3;
+	particulas[2].position.Set(0, 0, 100);
+	particulas[2].velocity.Set(220, 0, 0);
+	particulas[2].mass = 100;
+	particulas[2].radius= 3;
 
-	particles[3].position.Set(0, 100, 100);
-	particles[3].velocity.Set(0, -300, -100);
-	particles[3].mass = 1000;
-	particles[3].radius = 1;
+	particulas[3].position.Set(0, 100, 100);
+	particulas[3].velocity.Set(0, -300, -100);
+	particulas[3].mass = 1000;
+	particulas[3].radius = 1;
 
-	particles[4].position.Set(100, 100, 100);
-	particles[4].velocity.Set(0, -0, -100);
-	particles[4].mass = 100000;
-	particles[4].radius = 1;
+	particulas[4].position.Set(100, 100, 100);
+	particulas[4].velocity.Set(0, -0, -100);
+	particulas[4].mass = 100000;
+	particulas[4].radius = 1;
 	*/
 
 	/*
-	particles[5].position.Set(0, 200, 000);
-	particles[5].velocity.Set(0, -100, 0);
-	particles[5].mass = 1000;
-	particles[5].radius = 4;
+	particulas[5].position.Set(0, 200, 000);
+	particulas[5].velocity.Set(0, -100, 0);
+	particulas[5].mass = 1000;
+	particulas[5].radius = 4;
 
 
-	particles[6].position.Set(0, 100, 0);
-	particles[6].velocity.Set(0, 200, 0);
-	particles[6].mass = 10000;
-	particles[6].radius = 8;
+	particulas[6].position.Set(0, 100, 0);
+	particulas[6].velocity.Set(0, 200, 0);
+	particulas[6].mass = 10000;
+	particulas[6].radius = 8;
 	*/
 
-	CopyParticles(p3d_states.data(), particles.data(), PARTICLE_C);
-	CopyParticles(p_p3d_states.data(), point_particles.data(), POINT_PARTICLE_C);
-
-	for (int i = 0; i<PARTICLE_C; i++)
-		cout << i << " m: " << particles[i].mass << ":\n vx= " << particles[i].velocity.x << ", vy= " << particles[i].velocity.y << ", vz= " << particles[i].velocity.z << endl;
-
+	CopyParticles(estadoParticulas, particulas, NumParticulas);
+	CopyParticles(estadoEstrellas, estrellas, NumEstrellas);
 }
 
 //INIT DE OPENGL
@@ -198,134 +201,34 @@ void InitGL()
 
 }
 
-real deltat = 1000;					//Se usa en lo de integrar
-float fac = 0;
-int ifac = 0;
+//TODO ESTO DEBERÍA ESTAR EN ESCENA
 
-//Se usan para debug
-float r = 0;                     //NO SE USA
-float tp = 0.0;                           //Se va sumando en el render
+//Valores necesarios para el display
+const double deltat = 1000;			
+const double G = 6.67384*0.00080;//Constante que usas en la gravitacion universal
+
+//Controlan el tamaño de las lineas verdes y rojas de debug
+//Cuánto más grande sea, más pequeñas son las lineas
+float velocityDebug = -7;
+float accelerationDebug = -7;
 
 //Dibuja
 void display()
 {
-	glEnable(GL_LIGHTING);
-	//glClear(GL_COLOR_BUFFER_BIT);
-	//glClearColor (0.0,0.0,0.0,1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glColor3f(0.5, 0, 0);
+	glMatrixMode(GL_MODELVIEW);
+
+	//Reajustamos la pos de la luz
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
 
 	glPushMatrix();
 
+
+	//Pone la rotación de la escena correspondiente
 	glTranslatef(-shor, sheight, -sdepth);
 	glRotatef(-stheta, 1, 0, 0);
 	glRotatef(sphi, 0, 1, 0);
-
-	//Otro puto tiempo
-	static int t = clock();
-
-	if (rightArrow)
-	{
-		//Constante que usas en la gravitacion universal
-		real G = 6.67384*0.00080;
-
-		for (int i = 0; i < PARTICLE_C; i++)
-		{
-			//La G la usas aquí
-			UniversalGravitation(i, particles.data(), PARTICLE_C, p3d_states[i], 1.0 / deltat, G);
-		}
-	}
-
-	//?????
-	if (leftArrow)
-	{
-		for (int i = 0; i < PARTICLE_C; i++)//Calcula la gravedad direccional de cada una de las particulas
-			DirectionalGravity(i, particles.data(), PARTICLE_C, p3d_states[i], 1.0 / deltat);
-		
-	}
-	//Resuelve las colisiones que pudieran haber
-	CollisionResolution(PARTICLE_C, particles.data(), p3d_states.data());
-
-	//Copia el estado
-	CopyStates(p3d_states.data(), particles.data(), PARTICLE_C);
-
-	//Dibuja las particulas
-	for (int i = 0; i<PARTICLE_C; i++)
-		DrawParticle3d(particles[i]);
-	
-	glDisable(GL_LIGHTING);
-
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
-
-	SetColor(GREEN);
-
-	
-	//---------------POINT PARTICLE---------------
-	for (int i = 0; i<POINT_PARTICLE_C; i++)
-	{
-		if (p_positions[i].size()>100)
-			p_positions[i].erase(p_positions[i].begin(), p_positions[i].begin() + 1);
-	}
-
-	for (int i = 0; i<POINT_PARTICLE_C; i++)
-		p_positions[i].push_back(Vector3d(point_particles[i].position.x, point_particles[i].position.y, point_particles[i].position.z));
-
-	for (int i = 0; i<POINT_PARTICLE_C; i++)
-	{
-		SetColor(BLACK);
-		glBegin(GL_POINTS);
-
-		glVertex3f(p_positions[i][0].x, p_positions[i][0].y, p_positions[i][0].z);
-		glEnd();
-
-		glPointSize(1);
-		glBegin(GL_POINTS);
-
-
-		for (int j = 1; j<p_positions[i].size(); j++)
-		{
-			SetColor(G75);
-			glColor4f(float(j) / (float(p_positions[i].size())), float(j) / (float(p_positions[i].size())), float(j) / (float(p_positions[i].size())), float(j) / (float(p_positions[i].size())));
-			glVertex3f(p_positions[i][j].x, p_positions[i][j].y, p_positions[i][j].z);
-		}
-		glEnd();
-
-	}
-	//---------------POINT PARTICLE---------------
-
-	//---------------PARTICLE---------------
-
-	for (int i = 0; i<PARTICLE_C; i++)
-	{
-		if (positions[i].size()>2600000)
-			positions[i].erase(positions[i].begin(), positions[i].begin() + 1);
-	}
-
-	for (int i = 0; i<PARTICLE_C; i++)
-		positions[i].push_back(Vector3d(particles[i].position.x, particles[i].position.y, particles[i].position.z));
-
-	for (int i = 0; i<PARTICLE_C; i++)
-	{
-		glBegin(GL_POINTS);
-
-		glVertex3f(positions[i][0].x, positions[i][0].y, positions[i][0].z);
-		glEnd();
-
-		glPointSize(1);
-		glBegin(GL_POINTS);
-
-		SetColor(WHITE);
-		for (int j = 1; j<positions[i].size(); j++)
-			//glVertex3f(positions[i][j].x, positions[i][j].y, positions[i][j].z);
-		
-		glEnd();
-	}
-
-	//---------------PARTICLE---------------
-
-	glDisable(GL_LIGHTING);
-	glClear(GL_DEPTH_BUFFER_BIT);
 
 	/*
 	switch (contEscena)
@@ -334,30 +237,100 @@ void display()
 	case 1: testRB1.dibuja(); break;
 
 	default:
-		break;
+	break;
 
 	}*/
 
+	//Si pulsas la flecha derecha
+	if (rightArrow)
+	{
+		for (int i = 0; i < NumParticulas; i++)
+			UniversalGravitation(i, particulas.data(), NumParticulas, estadoParticulas[i], 1.0 / deltat, G);
+		
+	}
+
+	//Si pulsas la flecha izquierda
+	if (leftArrow)
+	{
+		for (int i = 0; i < NumParticulas; i++)//Calcula la gravedad direccional de cada una de las particulas
+			DirectionalGravity(i, particulas.data(), NumParticulas, estadoParticulas[i], 1.0 / deltat);
+		
+	}
+	//Resuelve las colisiones que pudieran haber
+	CollisionResolution(NumParticulas, particulas.data(), estadoParticulas.data());
+
+	//Copia el estado
+	CopyStates(estadoParticulas.data(), particulas.data(), NumParticulas);
+
+
+	//Dibuja las particulas
+	for (int i = 0; i<NumParticulas; i++)
+		particulas[i].dibuja();
+
+	//A LAS ESTRELLAS Y AL DEBUG DEL RECORRIDO NO LES AFECTA LA LUZ
+	glDisable(GL_LIGHTING);
 	
-	//-------------DEBUG----------------
+	//---------------ESTRELLAS---------------
+
+	for (int i = 0; i<NumEstrellas; i++)
+	{
+		SetColor(WHITE);
+		glBegin(GL_POINTS);
+
+		glVertex3f(estrellas[i].position.x, estrellas[i].position.y, estrellas[i].position.z);
+		glEnd();	
+	}
+
+
+	//---------------ESTRELLAS---------------
+
+	//COMENTAR ESTO SI NO SE QUIERE EL RECORRIDO DE DEBUG
+	//---------------RECORRIDO PARTICULAS---------------
+
+	//Borra los puntos de trayectoria si hay demasiados
+	for (int i = 0; i<NumParticulas; i++)
+	{
+		if (posParticulas[i].size()>2600000)
+			posParticulas[i].erase(posParticulas[i].begin(), posParticulas[i].begin() + 1);
+	}
+
+	//Crea un nuevo punto de la trayectoria y lo añade al vector
+	for (int i = 0; i<NumParticulas; i++)
+		posParticulas[i].push_back(Vector3d(particulas[i].position.x, particulas[i].position.y, particulas[i].position.z));
+
+	//Dibuja todos los puntos de la trayectoria para cada particula
+	for (int i = 0; i<NumParticulas; i++)
+	{
+		glPointSize(1);
+		SetColor(WHITE);
+		glBegin(GL_POINTS);
+
+		for (int j = 1; j<posParticulas[i].size(); j++)
+			glVertex3f(posParticulas[i][j].x, posParticulas[i][j].y, posParticulas[i][j].z);
+		
+		glEnd();
+	}
+	glEnable(GL_LIGHTING);
+
+	//---------------RECORRIDO PARTICULAS---------------
+
+	//COMENTAR ESTO SI NO SE QUIEREN LINEAS DE DEBUG
+	//-------------VECTOR DEBUG----------------
 	
 	//Draw velocity and acceleration vectors
 	SetColor(GREEN);
-	for (int i = 0; i<PARTICLE_C; i++)
-		DrawVector3d(particles[i].velocity*pow(1.89, ifac*-1), particles[i].position.x, particles[i].position.y, particles[i].position.z);
+	for (int i = 0; i<NumParticulas; i++)
+		DrawVector3d(particulas[i].velocity*pow(1.89, velocityDebug), particulas[i].position.x, particulas[i].position.y, particulas[i].position.z);
 
 	SetColor(RED);
-	for (int i = 0; i<PARTICLE_C; i++)
-		DrawVector3d(particles[i].acceleration*pow(3.1, ifac*-1), particles[i].position.x, particles[i].position.y, particles[i].position.z);
+	for (int i = 0; i<NumParticulas; i++)
+		DrawVector3d(particulas[i].acceleration*pow(3.1, accelerationDebug), particulas[i].position.x, particulas[i].position.y, particulas[i].position.z);
 		
 	dibujaEjes();
 
-	//-------------DEBUG----------------
-	
-	//escena->dibuja();
-	glPopMatrix();
+	//-------------VECTOR DEBUG----------------
 
-	tp += 0.01;
+	glPopMatrix();
 
 	glFlush();
 	glutSwapBuffers();

@@ -76,7 +76,7 @@
     <ClInclude Include="Help_Functions.h" />
     <ClInclude Include="Physics_Functions.h" />
     <ClInclude Include="Primitives.h" />
-    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Includes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

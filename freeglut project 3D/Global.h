@@ -1,9 +1,9 @@
 #pragma once
-#include "stdafx.h"
+#include "Includes.h"
 
-extern const short POINT_PARTICLE_C;
-extern const short PARTICLE_C;
-extern vector<Particle3d> particles;
-extern vector<PointParticle3d> point_particles;
-extern vector<State> p3d_states;
-extern vector<State> p_p3d_states;
+extern const short NumEstrellas;
+extern const short NumParticulas;
+extern vector<Particle3d> particulas;
+extern vector<Estrella> estrellas;
+extern vector<State> estadoParticulas;
+extern vector<State> estadoEstrellas;

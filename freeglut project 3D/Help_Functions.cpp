@@ -1,57 +1,86 @@
-#include "stdafx.h"
+#include "Includes.h"
 #include "Help_Functions.h"
 
 //------------------VECTOR OPERATIONS----------------------------
 //Multiplicación de todas las coordenas de dos vectores, entra para calcular colision
-real dotProduct(Vector3d& v1, Vector3d& v2){
+double dotProduct(Vector3d& v1, Vector3d& v2){
 	return (v1.x*v2.x+ v1.y*v2.y+ v1.z*v2.z);
 }
-
 //------------------VECTOR OPERATIONS----------------------------
 
 
 //-----------------PARTICLE3D OPERATIONS-------------------------
 
 //Crea un tipo de partículas segun el preset
-void InitP3d(Particle3d* P, int size, P3d_preset p3d)
+void InitParticles(vector<Particle3d> & particulas, int size, Preset preset)
 {
-	switch (p3d)
+	switch (preset)
 	{
-		//Particulas de radio 0
-	case p3d_point_particles:
-
-		for (int i = 0; i<size; i++)
-			P[i].radius = 0.0;
-
-		break;
-
 		//Partículas con un ID
-	case p3d_id:
+	case Preset_id:
 
 		for (int i = 0; i<size; i++)
-			P[i].id = i;
+			particulas[i].id = i;
 
 		break;
 
 		//Partículas con una masa aleatoria
-	case p3d_random_m:
+	case Preset_random_m:
 
 		for (int i = 0; i<size; i++)
-			P[i].mass = 2000.0*(rand() % 1000 + 0.001);
+			particulas[i].mass = 2000.0*(rand() % 1000 + 0.001);
 		break;
 
 		//Partículas con un radio en función de la masa
-	case p3d_radius:
+	case Preset_radius:
 
 		for (int i = 0; i<size; i++)
-			P[i].radius = 0.75 + 0 * P[i].mass / (75 * pow(10.0, 10));
+			particulas[i].radius = 0.75 + 0 * particulas[i].mass / (75 * pow(10.0, 10));
 		break;
 
 		//Partículas con una velocidad aleatoria
-	case p3d_random_v:
+	case Preset_random_v:
 
 		for (int i = 0; i<size; i++)
-			P[i].velocity = Vector3d((rand() % 1000 - 500) / 100.0, (rand() % 1000 - 500) / 100.0, (rand() % 1000 - 500) / 100.0);
+			particulas[i].velocity = Vector3d((rand() % 1000 - 500) / 100.0, (rand() % 1000 - 500) / 100.0, (rand() % 1000 - 500) / 100.0);
+		break;
+
+	default:
+		break;
+	}
+}
+
+void InitParticles(vector<Estrella> & particulas, int size, Preset preset)
+{
+	switch (preset)
+	{
+		//Partículas con un ID
+	case Preset_id:
+
+		for (int i = 0; i<size; i++)
+			particulas[i].id = i;
+
+		break;
+
+		//Partículas con una masa aleatoria
+	case Preset_random_m:
+
+		for (int i = 0; i<size; i++)
+			particulas[i].mass = 2000.0*(rand() % 1000 + 0.001);
+		break;
+
+		//Partículas con un radio en función de la masa
+	case Preset_radius:
+
+		for (int i = 0; i<size; i++)
+			particulas[i].radius = 0.75 + 0 * particulas[i].mass / (75 * pow(10.0, 10));
+		break;
+
+		//Partículas con una velocidad aleatoria
+	case Preset_random_v:
+
+		for (int i = 0; i<size; i++)
+			particulas[i].velocity = Vector3d((rand() % 1000 - 500) / 100.0, (rand() % 1000 - 500) / 100.0, (rand() % 1000 - 500) / 100.0);
 		break;
 
 	default:
@@ -60,74 +89,59 @@ void InitP3d(Particle3d* P, int size, P3d_preset p3d)
 }
 
 //Devuelvo un estado con los atributos de la partícula atributo
-State P3dToState(Particle3d&p){
+State ParticleToState(Particle3d& particula){
 
 	State STATE;
-	STATE.i = p.id;
-	STATE.mass = p.mass;
-	STATE.Position = p.position;
-	STATE.Velocity = p.velocity;
+	STATE.id = particula.id;
+	STATE.mass = particula.mass;
+	STATE.Position = particula.position;
+	STATE.Velocity = particula.velocity;
 	return STATE;
 }
 
 //Copia size estados en particulas
-void CopyParticles(State* S, Particle3d* P, int size){
+void CopyParticles(vector<State> & estados, vector<Particle3d> & particulas, int size){
 	for (int i = 0; i<size; i++)
-		S[i] = P3dToState(P[i]);
+		estados[i] = ParticleToState(particulas[i]);
+}
+
+void CopyParticles(vector<State> & estados, vector<Estrella> & particulas, int size){
+	for (int i = 0; i<size; i++)
+		estados[i] = ParticleToState(particulas[i]);
 }
 
 //Copia size particulas en estados
-void CopyStates(State* S, Particle3d* P, int size){
+void CopyStates(State* estados, Particle3d* particulas, int size){
 	for (int i = 0; i<size; i++)
 	{
-		P[i].position = S[i].Position;
-		P[i].velocity = S[i].Velocity;
-		P[i].acceleration = S[i].Acceleration;
-		//P[i]=StateToP3d(S[i]);
-
+		particulas[i].position = estados[i].Position;
+		particulas[i].velocity = estados[i].Velocity;
+		particulas[i].acceleration = estados[i].Acceleration;
 	}
 }
 
 //-----------------PARTICLE3D OPERATIONS-------------------------
 
 //-----------------DEBUG---------------------------
-//Dibuja una linea desde una posición dada por coordenadas hasta otra dada por un vector
-void DrawVector3d(Vector3d& v, real x, real y, real z)
-{
-	//ESTAS DOS COSAS NO LAS USA
-	Vector3d tempv = v;
-	tempv.Normalize();//normalize to get direction for drawing arrow head
 
+//Dibuja una linea desde una posición dada por coordenadas hasta otra dada por un vector
+void DrawVector3d(Vector3d& v, double x, double y, double z)
+{
 	glBegin(GL_LINES);
+
 	glVertex3f(x, y, z);
 	glVertex3f(x + v.x, y + v.y, z + v.z);
 
-	//glVertex3f(x+v.x, y+v.y, z+v.z);
-	//glVertex3f(x+v.x-tempv.x*0.1*cos(3.14/6), y+v.y+0.06*sin(3.14/6), z+v.z);
 	glEnd();
 }
-
-//Dibuja los puntos blancos de debug que muestran la trayectoria
-void DrawParticle3d(Particle3d &p)
-{
-	glPushMatrix();
-	//glLoadIdentity();
-	glTranslatef(p.position.x, p.position.y, p.position.z);
-	SetColor(G75);
-
-	glutSolidSphere(p.radius, 40, 40);
-	//cout<<"drawing at x:"<<p.position.x<<", y: "<<p.position.y<<", z:"<< p.position.z<<endl;;
-	glPopMatrix();
-}
-
 
 //-----------------DEBUG---------------------------
 
 //-----------------UTILIDADES---------------------------
 
 //Distancia entre dos puntos
-real Distance3d(Vector3d p1, Vector3d p2){
-	real d=sqrt( (p1.x-p2.x)*(p1.x-p2.x) +
+double Distance3d(Vector3d p1, Vector3d p2){
+	double d=sqrt( (p1.x-p2.x)*(p1.x-p2.x) +
 				 (p1.y-p2.y)*(p1.y-p2.y) +
 				 (p1.z-p2.z)*(p1.z-p2.z)
 			   );

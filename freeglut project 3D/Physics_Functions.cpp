@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "Includes.h"
 #include "Physics_Functions.h"
 #include "Global.h"
 
@@ -8,13 +8,13 @@ Particle3d *P;	//array of particles to reference(p3d or pp3d)
 State *PS;
 short P_C;
 Vector3d ContactNormal;
-real b_g=6.67384*0.000080, s_g;
-const short POINT_PARTICLE_C=100;
-const short PARTICLE_C=125;
-vector<Particle3d> particles(PARTICLE_C);
-vector<PointParticle3d> point_particles(POINT_PARTICLE_C);
-vector<State> p3d_states(PARTICLE_C);
-vector<State> p_p3d_states(POINT_PARTICLE_C);
+double b_g=6.67384*0.000080, s_g;
+const short NumEstrellas = 1000;
+const short NumParticulas = 125;
+vector<Particle3d> particulas(NumParticulas);
+vector<Estrella> estrellas(NumEstrellas);
+vector<State> estadoParticulas(NumParticulas);
+vector<State> estadoEstrellas(NumEstrellas);
 
 
 Vector3d accUniversalGravitation(State ip)
@@ -25,18 +25,18 @@ Vector3d accUniversalGravitation(State ip)
 	
 	for(int i=0; i<P_C; i++)
 	{
-		if(ip.i==i) continue;
+		if(ip.id==i) continue;
 		
-		real d=sqrt( (ip.Position.x-P[i].position.x)*(ip.Position.x-P[i].position.x) +
+		double d=sqrt( (ip.Position.x-P[i].position.x)*(ip.Position.x-P[i].position.x) +
 				 (ip.Position.y-P[i].position.y)*(ip.Position.y-P[i].position.y) +
 				 (ip.Position.z-P[i].position.z)*(ip.Position.z-P[i].position.z)
 			   );
 
-	real wk=1.0;
-	real f=-b_g*wk*ip.mass*P[i].mass/(d*d);
+	double wk=1.0;
+	double f=-b_g*wk*ip.mass*P[i].mass/(d*d);
 
 	
-	tempAcceleration.Set((ip.Position.x-P[i].position.x)*f/d/ip.mass, (ip.Position.y-P[i].position.y)*f/d/ip.mass,
+	tempAcceleration.set((ip.Position.x - P[i].position.x)*f / d / ip.mass, (ip.Position.y - P[i].position.y)*f / d / ip.mass,
 		(ip.Position.z-P[i].position.z)*f/d/ip.mass);
 	ACCELERATION+=tempAcceleration;
 	
@@ -54,7 +54,7 @@ Derivative evaluate(int ip)
 {
 	Derivative output;
 	output.dPosition = P[ip].velocity ;
-	output.dVelocity = acc_func(P3dToState(P[ip])); //arbitrary acceleration function
+	output.dVelocity = acc_func(ParticleToState(P[ip])); //arbitrary acceleration function
 
 	return output;
 }
@@ -64,7 +64,7 @@ Derivative evaluate(int ip, float dt, Derivative &d)
 {
 	State state1, state2;
 	Derivative output;
-	state1.i=ip;
+	state1.id=ip;
 	state1.mass=P[ip].mass;
 	state1.Position = P[ip].position + d.dPosition*dt + d.dVelocity*0.5*dt*dt;// dp/dt= velocity
 	state1.Velocity = P[ip].velocity + d.dVelocity*dt;//p''=dv/dt= acceleration
@@ -120,7 +120,7 @@ void DirectionalGravity(int ip, Particle3d* p , short p_c, State& fstate, float 
 
 }
 
-void UniversalGravitation(int ip, Particle3d* p, short p_c, State& fstate , float dt, real G )
+void UniversalGravitation(int ip, Particle3d* p, short p_c, State& fstate , float dt, double G )
 {
 	P=p;
 	P_C=p_c;
@@ -148,7 +148,7 @@ void UniversalGravitation(int ip, Particle3d* p, short p_c, State& fstate , floa
 
 }
 
-void UniversalGravitation_simple(int ip, Particle3d* p, short p_c, State& fstate , float dt, real G )
+void UniversalGravitation_simple(int ip, Particle3d* p, short p_c, State& fstate , float dt, double G )
 {
 	P=p;
 	P_C=p_c;
@@ -173,9 +173,9 @@ void UniversalGravitation_simple(int ip, Particle3d* p, short p_c, State& fstate
 void CollisionResolution2(int p_c, Particle3d *p, State *ps)
 {
 	Vector3d Normal, Tangent, Tangent2, Tangent3;
-	real ra, rb;
-	real err_l;
-	real C=.5; 
+	double ra, rb;
+	double err_l;
+	double C=.5; 
 						
 	for(int i=0; i<p_c; i++)
 		{
@@ -184,25 +184,25 @@ void CollisionResolution2(int p_c, Particle3d *p, State *ps)
 				if(i==j)
 					continue;
 
-				real d=(Distance3d(ps[i].Position, ps[j].Position)-(p[i].radius+p[j].radius));
+				double d=(Distance3d(ps[i].Position, ps[j].Position)-(p[i].radius+p[j].radius));
 				if( d<0)	
 				{
-					Normal.Set(ps[i].Position.x-ps[j].Position.x, ps[i].Position.y-ps[j].Position.y,ps[i].Position.z-ps[j].Position.z);
+					Normal.set(ps[i].Position.x-ps[j].Position.x, ps[i].Position.y-ps[j].Position.y,ps[i].Position.z-ps[j].Position.z);
 					Normal.Normalize();
 					ContactNormal=Normal;
 					dImpenetrationResolution(i, j, p, ps);
 									
 					Vector3d &s1=ps[i].Velocity, &s2=ps[j].Velocity;
 
-					real v1n, v1t, v2n, v2t;
-					real v1n2, v1t2, v2n2, v2t2;
-					real v1n3, v1t3, v2n3, v2t3;
-					real v1np, v2np;
+					double v1n, v1t, v2n, v2t;
+					double v1n2, v1t2, v2n2, v2t2;
+					double v1n3, v1t3, v2n3, v2t3;
+					double v1np, v2np;
 
 										
-					Tangent.Set(-Normal.y, Normal.x, 0);
-					Tangent2.Set(-Normal.z, 0, Normal.x);
-					Tangent3.Set(0, -Normal.z, Normal.y);
+					Tangent.set(-Normal.y, Normal.x, 0);
+					Tangent2.set(-Normal.z, 0, Normal.x);
+					Tangent3.set(0, -Normal.z, Normal.y);
 					v1n=Normal.x*s1.x + Normal.y*s1.y + Normal.z*s1.z;
 					v2n=Normal.x*s2.x + Normal.y*s2.y + Normal.z*s2.z;
 
@@ -235,13 +235,13 @@ void dImpenetrationResolution(int i, int j, Particle3d *p, State *ps)
 {
 
 				
-	real di=Distance3d(p[i].position, ps[i].Position);//previous distances
-	real dj=Distance3d(p[j].position, ps[j].Position);
-	real err_l=abs((p[i].radius+p[j].radius)-Distance3d(p[i].position, p[j].position));
+	double di=Distance3d(p[i].position, ps[i].Position);//previous distances
+	double dj=Distance3d(p[j].position, ps[j].Position);
+	double err_l=abs((p[i].radius+p[j].radius)-Distance3d(p[i].position, p[j].position));
 
-								real vm1=p[i].velocity.Magnitude(), vm2=p[j].velocity.Magnitude();
-								real tv=1.0/(p[j].mass+vm2) + 1.0/(p[i].mass+vm1);
-								//real tv=vm1 + vm2;
+								double vm1=p[i].velocity.Magnitude(), vm2=p[j].velocity.Magnitude();
+								double tv=1.0/(p[j].mass+vm2) + 1.0/(p[i].mass+vm1);
+								//double tv=vm1 + vm2;
 								
 						Vector3d mv=ContactNormal;
 						mv.Normalize();
@@ -258,10 +258,10 @@ void dImpenetrationResolution(int i, int j, Particle3d *p, State *ps)
 
 void CollisionResolution(int p_c, Particle3d *p, State *ps)
 {
-	real d1, d2;
-	real ra, rb;
-	real err_l;
-	real C=0.60;
+	double d1, d2;
+	double ra, rb;
+	double err_l;
+	double C=0.60;
 	Vector3d Normal, Tangent, Tangent2, Tangent3;
 
 		for(int i=0; i<p_c; i++)
@@ -271,23 +271,23 @@ void CollisionResolution(int p_c, Particle3d *p, State *ps)
 				if(i==j)
 					continue;
 
-				real d=(Distance3d(ps[i].Position, ps[j].Position)-(p[i].radius+p[j].radius));
+				double d=(Distance3d(ps[i].Position, ps[j].Position)-(p[i].radius+p[j].radius));
 				if( d<0)	
 				{
 						
-					Normal.Set(ps[i].Position.x-ps[j].Position.x, ps[i].Position.y-ps[j].Position.y,ps[i].Position.z-ps[j].Position.z);
+					Normal.set(ps[i].Position.x - ps[j].Position.x, ps[i].Position.y - ps[j].Position.y, ps[i].Position.z - ps[j].Position.z);
 					Normal.Normalize();
 					ContactNormal=Normal;
 					dImpenetrationResolution(i,j,p,ps);
 											
-					real separatingVelocity = dotProduct(ps[i].Velocity-ps[j].Velocity,Normal);
-					real newSepVelocity = -separatingVelocity * C;
-					real deltaVelocity = newSepVelocity - separatingVelocity;
+					double separatingVelocity = dotProduct(ps[i].Velocity-ps[j].Velocity,Normal);
+					double newSepVelocity = -separatingVelocity * C;
+					double deltaVelocity = newSepVelocity - separatingVelocity;
 											
-					const real totalInverseMass = 1.0/(ps[i].mass)+1.0/(ps[j].mass);
+					const double totalInverseMass = 1.0/(ps[i].mass)+1.0/(ps[j].mass);
 											
 					// Calculate the impulse to apply.
-					real impulse = deltaVelocity / totalInverseMass;
+					double impulse = deltaVelocity / totalInverseMass;
 					// Find the amount of impulse per unit of inverse mass.
 					Vector3d impulsePerIMass = Normal * impulse;
 					// Apply impulses: they are applied in the direction of the contact,
@@ -309,14 +309,14 @@ void CollisionResolution(int p_c, Particle3d *p, State *ps)
 void CollisionResolution_Ground(int p_c, Particle3d *p, State *ps){
 
 	Vector3d Tangent, Tangent2, Tangent3;
-	ContactNormal.Set(0,1,0);
+	ContactNormal.set(0, 1, 0);
 	ContactNormal.Normalize();
-	real v1n, v1t;
-	real v1n2, v1t2;
-	real v1n3, v1t3;
-	real v1np;
-	real C=0.45;
-	real groundMass=9999999999;
+	double v1n, v1t;
+	double v1n2, v1t2;
+	double v1n3, v1t3;
+	double v1np;
+	double C=0.45;
+	double groundMass=9999999999;
 								
 	for(int i=0; i<p_c; i++)
 		{
@@ -329,9 +329,9 @@ void CollisionResolution_Ground(int p_c, Particle3d *p, State *ps){
 					Vector3d &s1=ps[i].Velocity;
 
 							
-					Tangent.Set(-ContactNormal.y, ContactNormal.x, 0);
-					Tangent2.Set(-ContactNormal.z, 0, ContactNormal.x);
-					Tangent3.Set(0, -ContactNormal.z, ContactNormal.y);
+					Tangent.set(-ContactNormal.y, ContactNormal.x, 0);
+					Tangent2.set(-ContactNormal.z, 0, ContactNormal.x);
+					Tangent3.set(0, -ContactNormal.z, ContactNormal.y);
 					v1n=ContactNormal.x*s1.x + ContactNormal.y*s1.y + ContactNormal.z*s1.z;
 
 					v1t=Tangent.x*s1.x + Tangent.y*s1.y;
