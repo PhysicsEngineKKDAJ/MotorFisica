@@ -1,9 +1,28 @@
 #pragma once
 #include "Includes.h"
 
+/*
+--------------------------------------------------------------------------------------
+	ESTE .H CONTIENE TODAS LAS ESTRUCTURAS Y CLASES UTILIZABLES POR EL SIMULADOR
+--------------------------------------------------------------------------------------
+*/
 
-//Este archivo contiene todos los tipos de objetos que podemos crear
+//DECLARACIÓN DE CLASES Y ESTRUCTURAS
+class Vector3d;
+class Particle3d;
+struct State;
+struct Derivative;
+/*
+class Object3d;
+class Box3d;
+struct Face3d;
+*/
 
+/*
+--------------------------------------------------------------------------------------
+									ENUMERADOS
+--------------------------------------------------------------------------------------
+*/
 enum COLOR{BLACK, RED, GREEN, BLUE, WHITE, YELLOW, ORANGE, MAGENTA,
 			G75, //75% blanco 
 			G50, //50% blanco
@@ -19,19 +38,11 @@ enum  Preset
 	Preset_random_v, //Establece velocidades aleatorias
 }; 
 
-//Declaración anticipada de las clases
-class Vector3d;
-struct State;
-class Particle3d;
-struct Derivative;
 /*
-class Object3d;
-class Box3d;
-struct Face3d;
+--------------------------------------------------------------------------------------
+		CLASE VECTOR - CONTIENE TODAS LAS OPERACIONES APLICABLES A UN VECTOR
+--------------------------------------------------------------------------------------
 */
-
-
-//Clase Vector, tiene todas las operaciones para calcular la física
 class Vector3d{
 public:
 	Vector3d() :x(0.0), y(0.0), z(0.0){}
@@ -58,20 +69,75 @@ public:
 	double x, y, z;//Coordenadas del vector
 };
 
+/*
+--------------------------------------------------------------------------------------
+					CLASE Y MÉTODO AUXILIAR DE PARTÍCULA 3D
+--------------------------------------------------------------------------------------
+*/
+class Particle3d{
+public:
+	int id;
+
+	Vector3d position, velocity, acceleration;
+	//COSAS FISICAS
+	double damping; 
+	double inverseMass;
+	double mass;
+	double radius;
+	Particle3d(){ radius = 0.5; position.x = (rand() % 500 - 250.0) / 10.0; position.y = (rand() % 500 - 250.0) / 10.0; position.z = (rand() % 500 - 250.0) / 10.0; }
+
+	void dibuja();
+};
+
+
+/*
+--------------------------------------------------------------------------------------
+				CLASE ESTRELLA - HEREDA DE LA CLASE PARTÍCULA 3D
+--------------------------------------------------------------------------------------
+*/
+class Estrella : public Particle3d{
+public:
+	Estrella(){ mass = 10; radius = 0.5; position.x = (rand() % 5000 - 2500.0) / 10.0; position.y = (rand() % 5000 - 2500.0) / 10.0; position.z = (rand() % 5000 - 2500.0) / 10.0; }
+};
+
+
+/*
+--------------------------------------------------------------------------------------
+									ESTRUCTURAS
+--------------------------------------------------------------------------------------
+*/
+
+//Struct del estado de un cuerpo - Contiene Posición, Velocidad, Aceleración, Masa y un Identificador Numérico
+struct State
+{
+	Vector3d Position, Velocity, Acceleration;
+	float mass;
+	int id;
+
+};
+
+//Struct de la derivada de Posición y Velocidad
+struct Derivative
+{
+	Vector3d dPosition, dVelocity;
+};
+
+
+
 //TENEMOS QUE DEFINIR SI QUEREMOS OBJETOS COMO CUBOS
 //Objetos no particulas
 /*
 class Object3d{
 public:
-	Object3d() :nVertex(0), nFace(0), nVertexNormal(0), vertex(nullptr), face(nullptr), vertexNormal(nullptr){}
-	~Object3d(){}
+Object3d() :nVertex(0), nFace(0), nVertexNormal(0), vertex(nullptr), face(nullptr), vertexNormal(nullptr){}
+~Object3d(){}
 
-	int nVertex, nFace, nVertexNormal;
+int nVertex, nFace, nVertexNormal;
 
-	//Vectores dinámicos con cada uno de los vertices, normales y caras
-	Vector3d *vertex;
-	Vector3d *vertexNormal;
-	Face3d *face;
+//Vectores dinámicos con cada uno de los vertices, normales y caras
+Vector3d *vertex;
+Vector3d *vertexNormal;
+Face3d *face;
 
 };
 
@@ -89,40 +155,3 @@ int *iVertexNormal;
 Face3d() :nFaceV(0), iVertex(nullptr), iVertexNormal(nullptr){}
 };
 */
-
-class Particle3d{
-public:
-	int id;
-
-	Vector3d position, velocity, acceleration;
-	//COSAS FISICAS
-	double damping; 
-	double inverseMass;
-	double mass;
-	double radius;
-	Particle3d(){ radius = 0.5; position.x = (rand() % 500 - 250.0) / 10.0; position.y = (rand() % 500 - 250.0) / 10.0; position.z = (rand() % 500 - 250.0) / 10.0; }
-
-	void dibuja();
-};
-
-//Estrellas
-class Estrella : public Particle3d{
-public:
-	Estrella(){ mass = 10; radius = 0.5; position.x = (rand() % 5000 - 2500.0) / 10.0; position.y = (rand() % 5000 - 2500.0) / 10.0; position.z = (rand() % 5000 - 2500.0) / 10.0; }
-};
-
-
-//Estado del cuerpo
-struct State
-{
-	Vector3d Position, Velocity, Acceleration;
-	float mass;
-	int id;
-
-};
-
-//NO SE QUE COÑO ESO
-struct Derivative
-{
-	Vector3d dPosition, dVelocity;
-};

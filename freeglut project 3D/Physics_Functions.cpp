@@ -1,21 +1,29 @@
-#include "Includes.h"
 #include "Physics_Functions.h"
-#include "Global.h"
 
-//Local variables
-Vector3d (*acc_func)(State); //acceleration function pointer
-Particle3d *P;	//array of particles to reference(p3d or pp3d)
-State *PS;
-short P_C;
-Vector3d ContactNormal; // Vector de la normal cuando dos objetos se colisionan
-double b_g=6.67384*0.000080, s_g; // el 6.67384 es la constante de gravitación universal
-const short NumEstrellas = 1000;
-const short NumParticulas = 125;
+
+
+
+
+
+
+//VARIABLES GLOBALES DE LA CLASE
 vector<Particle3d> particulas(NumParticulas);
 vector<Estrella> estrellas(NumEstrellas);
 vector<State> estadoParticulas(NumParticulas);
 vector<State> estadoEstrellas(NumEstrellas);
 
+//Este vector guarda todas las posiciones antiguas de cada particula
+vector<vector<Vector3d>> posParticulas(NumParticulas);
+
+Vector3d(*acc_func)(State); //acceleration function pointer
+Vector3d ContactNormal; // Vector de la normal cuando dos objetos se colisionan
+Particle3d *P;	//array of particles to reference(p3d or pp3d)
+State *PS;
+
+short P_C;
+double b_g = 6.67384*0.000080, s_g; // el 6.67384 es la constante de gravitación universal
+const short NumEstrellas = 1000;
+const short NumParticulas = 125;
 
 Vector3d accUniversalGravitation(State ip)
 {
@@ -49,10 +57,9 @@ Vector3d accUniversalGravitation(State ip)
 	return ACCELERATION;
 
 }
-Vector3d accDirectionalGravity(State sip)
-{	
-	return Vector3d(0,-10,0);
-}
+
+Vector3d accDirectionalGravity(State sip)	{	return Vector3d(0,-10,0);	}
+
 
 // evaluar es que le pasas un indice y le aplica las ecuaciones a la posicion y velocidad.
 Derivative evaluate(int ip)
@@ -174,66 +181,7 @@ void UniversalGravitation_simple(int ip, Particle3d* p, short p_c, State& fstate
 	fstate.Acceleration = dVELOCITY*dt;
 
 }
-/*void CollisionResolution2(int p_c, Particle3d *p, State *ps)
-{
-	Vector3d Normal, Tangent, Tangent2, Tangent3;
-	double ra, rb;
-	double err_l;
-	double C=.5; 
-						
-	for(int i=0; i<p_c; i++)
-		{
-			for(int j=i; j<p_c; j++)
-			{
-				if(i==j)
-					continue;
 
-				double d=(Distance3d(ps[i].Position, ps[j].Position)-(p[i].radius+p[j].radius));
-				if( d<0)	
-				{
-					Normal.set(ps[i].Position.x-ps[j].Position.x, ps[i].Position.y-ps[j].Position.y,ps[i].Position.z-ps[j].Position.z);
-					Normal.Normalize();
-					ContactNormal=Normal;
-					dImpenetrationResolution(i, j, p, ps);
-									
-					Vector3d &s1=ps[i].Velocity, &s2=ps[j].Velocity;
-
-					double v1n, v1t, v2n, v2t;
-					double v1n2, v1t2, v2n2, v2t2;
-					double v1n3, v1t3, v2n3, v2t3;
-					double v1np, v2np;
-
-										
-					Tangent.set(-Normal.y, Normal.x, 0);
-					Tangent2.set(-Normal.z, 0, Normal.x);
-					Tangent3.set(0, -Normal.z, Normal.y);
-					v1n=Normal.x*s1.x + Normal.y*s1.y + Normal.z*s1.z;
-					v2n=Normal.x*s2.x + Normal.y*s2.y + Normal.z*s2.z;
-
-					v1t=Tangent.x*s1.x + Tangent.y*s1.y;
-					v2t=Tangent.x*s2.x + Tangent.y*s2.y;
-					v1t2=Tangent2.x*s1.x + Tangent2.z*s1.z;
-					v2t2=Tangent2.x*s2.x + Tangent2.z*s2.z;
-					v1t3=Tangent3.z*s1.z + Tangent3.y*s1.y;
-					v2t3=Tangent3.z*s2.z + Tangent3.y*s2.y;
-
-					v1np=(v1n*(ps[i].mass-C*ps[j].mass)+ v2n*ps[j].mass*(C+1))/(ps[i].mass+ps[j].mass);
-					v2np=(v2n*(ps[j].mass-C*ps[i].mass)+ v1n*ps[i].mass*(C+1))/(ps[i].mass+ps[j].mass);
-									
-					ps[i].Velocity.x=Normal.x*v1np+ Tangent.x*v1t + Tangent2.x*v1t2 + Tangent3.x*v1t3;
-					ps[i].Velocity.y=Normal.y*v1np+ Tangent.y*v1t + Tangent2.y*v1t2 + Tangent3.y*v1t3;
-					ps[i].Velocity.z=Normal.z*v1np+ Tangent.z*v1t + Tangent2.z*v1t2 + Tangent3.z*v1t3;
-					ps[j].Velocity.x=Normal.x*v2np+ Tangent.x*v2t + Tangent2.x*v2t2 + Tangent3.x*v2t3;
-					ps[j].Velocity.y=Normal.y*v2np+ Tangent.y*v2t + Tangent2.y*v2t2 + Tangent3.y*v2t3;
-					ps[j].Velocity.z=Normal.z*v2np+ Tangent.z*v2t + Tangent2.z*v2t2 + Tangent3.z*v2t3;
-					}
-
-				}
-
-		}
-	
-
-}*/
 
 // Se utiliza cuando va a colisionar un objeto con otro
 void dImpenetrationResolution(int i, int j, Particle3d *p, State *ps)
@@ -246,7 +194,7 @@ void dImpenetrationResolution(int i, int j, Particle3d *p, State *ps)
 	// Es como una zona muerta
 	double err_l = abs((p[i].radius + p[j].radius) - Distance3d(p[i].position, p[j].position));
 
-	// dos variables que son las magnitudes de las coordenadas de la particula de la particula
+	// dos variables que son las magnitudes de las coordenadas de la particula
 	double vm1 = p[i].velocity.Magnitude(), vm2 = p[j].velocity.Magnitude();
 	
 	// ???????????????????
@@ -314,6 +262,15 @@ void CollisionResolution(int p_c, Particle3d *p, State *ps)
 		
 }
 
+/*
+******************************************
+******************************************
+MÉTODOS EN DESUSO
+******************************************
+******************************************
+*/
+
+
 /* MÉTODO ENCARGADO DE CALCULAR LAS COLISIONES ENTRE UNA PARTÍCULA Y EL PLANO (SUELO) DE LA SIMULACIÓN */
 
 //IMPORTANTE: NO SE USA ACTUALMENTE EN LA SIMULACIÓN 
@@ -368,3 +325,66 @@ void CollisionResolution_Ground(int p_c, Particle3d *p, State *ps){
 		}
 
 }
+
+
+
+/*void CollisionResolution2(int p_c, Particle3d *p, State *ps)
+{
+Vector3d Normal, Tangent, Tangent2, Tangent3;
+double ra, rb;
+double err_l;
+double C=.5;
+
+for(int i=0; i<p_c; i++)
+{
+for(int j=i; j<p_c; j++)
+{
+if(i==j)
+continue;
+
+double d=(Distance3d(ps[i].Position, ps[j].Position)-(p[i].radius+p[j].radius));
+if( d<0)
+{
+Normal.set(ps[i].Position.x-ps[j].Position.x, ps[i].Position.y-ps[j].Position.y,ps[i].Position.z-ps[j].Position.z);
+Normal.Normalize();
+ContactNormal=Normal;
+dImpenetrationResolution(i, j, p, ps);
+
+Vector3d &s1=ps[i].Velocity, &s2=ps[j].Velocity;
+
+double v1n, v1t, v2n, v2t;
+double v1n2, v1t2, v2n2, v2t2;
+double v1n3, v1t3, v2n3, v2t3;
+double v1np, v2np;
+
+
+Tangent.set(-Normal.y, Normal.x, 0);
+Tangent2.set(-Normal.z, 0, Normal.x);
+Tangent3.set(0, -Normal.z, Normal.y);
+v1n=Normal.x*s1.x + Normal.y*s1.y + Normal.z*s1.z;
+v2n=Normal.x*s2.x + Normal.y*s2.y + Normal.z*s2.z;
+
+v1t=Tangent.x*s1.x + Tangent.y*s1.y;
+v2t=Tangent.x*s2.x + Tangent.y*s2.y;
+v1t2=Tangent2.x*s1.x + Tangent2.z*s1.z;
+v2t2=Tangent2.x*s2.x + Tangent2.z*s2.z;
+v1t3=Tangent3.z*s1.z + Tangent3.y*s1.y;
+v2t3=Tangent3.z*s2.z + Tangent3.y*s2.y;
+
+v1np=(v1n*(ps[i].mass-C*ps[j].mass)+ v2n*ps[j].mass*(C+1))/(ps[i].mass+ps[j].mass);
+v2np=(v2n*(ps[j].mass-C*ps[i].mass)+ v1n*ps[i].mass*(C+1))/(ps[i].mass+ps[j].mass);
+
+ps[i].Velocity.x=Normal.x*v1np+ Tangent.x*v1t + Tangent2.x*v1t2 + Tangent3.x*v1t3;
+ps[i].Velocity.y=Normal.y*v1np+ Tangent.y*v1t + Tangent2.y*v1t2 + Tangent3.y*v1t3;
+ps[i].Velocity.z=Normal.z*v1np+ Tangent.z*v1t + Tangent2.z*v1t2 + Tangent3.z*v1t3;
+ps[j].Velocity.x=Normal.x*v2np+ Tangent.x*v2t + Tangent2.x*v2t2 + Tangent3.x*v2t3;
+ps[j].Velocity.y=Normal.y*v2np+ Tangent.y*v2t + Tangent2.y*v2t2 + Tangent3.y*v2t3;
+ps[j].Velocity.z=Normal.z*v2np+ Tangent.z*v2t + Tangent2.z*v2t2 + Tangent3.z*v2t3;
+}
+
+}
+
+}
+
+
+}*/

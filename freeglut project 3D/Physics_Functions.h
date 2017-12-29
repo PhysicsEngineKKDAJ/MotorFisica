@@ -20,3 +20,7 @@ void CollisionResolution2(int p_c, Particle3d *p, State *ps);
 
 void CollisionResolution(int p_c, Particle3d *p, State *ps);
 void CollisionResolution_Ground(int p_c, Particle3d *p, State *ps);	//EN DESUSO PARA ESTA SIMULACIÓN
+
+//-------------------------------------------
+//-------------------------------------------
+

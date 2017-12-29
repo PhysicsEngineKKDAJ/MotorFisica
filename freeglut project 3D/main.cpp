@@ -1,10 +1,11 @@
-#include "Includes.h"
-#include "Physics_Functions.h"
 #include <stdio.h>
 #include <math.h>
 #include <string>
 #include <time.h>
 #include <GL/freeglut.h>
+
+#include "Includes.h"
+#include "Physics_Functions.h"
 
 //--------------CAMARA-------------
 
@@ -40,9 +41,6 @@ bool paused = true;
 //int contEscena;
 //Escena*escena;
 
-//ESTA MIERDA HAY QUE QUITARLA DE AQUÍ
-//Este vector guarda todas las posiciones antiguas de cada particula
-vector<vector<Vector3d>> posParticulas(NumParticulas);
 
 //Dibuja los ejes de coordenadas
 void dibujaEjes(){

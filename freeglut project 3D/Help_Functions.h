@@ -26,7 +26,7 @@ void CopyStates(State*, Particle3d*, int);//Copia size particulas en estados
 
 //---Drawing---
 void DrawVector3d(Vector3d & v, double x, double y, double z);//Dibuja una linea desde una posición dada por coordenadas hasta otra dada por un vector
+void SetColor(COLOR c);//Aplica un color del enum del atributo a la matriz de modelado
 
 //---Debug---
 double Distance3d(Vector3d p1, Vector3d p2);//Distancia entre dos puntos
-void SetColor(COLOR c);//Aplica un color del enum del atributo a la matriz de modelado
