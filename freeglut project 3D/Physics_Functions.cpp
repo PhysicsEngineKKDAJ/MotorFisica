@@ -314,42 +314,51 @@ void CollisionResolution(int p_c, Particle3d *p, State *ps)
 		
 }
 
+/* MÉTODO ENCARGADO DE CALCULAR LAS COLISIONES ENTRE UNA PARTÍCULA Y EL PLANO (SUELO) DE LA SIMULACIÓN */
 
+//IMPORTANTE: NO SE USA ACTUALMENTE EN LA SIMULACIÓN 
 void CollisionResolution_Ground(int p_c, Particle3d *p, State *ps){
 
+	//VARIABLES LOCALES
 	Vector3d Tangent, Tangent2, Tangent3;
-	ContactNormal.set(0, 1, 0);
-	ContactNormal.Normalize();
 	double v1n, v1t;
 	double v1n2, v1t2;
 	double v1n3, v1t3;
 	double v1np;
 	double C=0.45;
 	double groundMass=9999999999;
-								
+	
+	//Normalizamos Vector de la normal global
+	ContactNormal.set(0, 1, 0);
+	ContactNormal.Normalize();
+
 	for(int i=0; i<p_c; i++)
-		{
-			
+		{		
+			//Si la partícula ha llegado a una posición en Y determinada (< -25)
 			if(ps[i].Position.y<-25)	
 				{
+					//Recalculamos su posición para dejarla en la posición límite
 					ps[i].Position.y=-25;
-												
-						
-					Vector3d &s1=ps[i].Velocity;
 
-							
+					Vector3d &s1=ps[i].Velocity;
+					
+					//Damos valor a las 3 tangentes para que estén acordes al plano
 					Tangent.set(-ContactNormal.y, ContactNormal.x, 0);
 					Tangent2.set(-ContactNormal.z, 0, ContactNormal.x);
 					Tangent3.set(0, -ContactNormal.z, ContactNormal.y);
+					
+					//Suma de las normales del plano
 					v1n=ContactNormal.x*s1.x + ContactNormal.y*s1.y + ContactNormal.z*s1.z;
 
+					//Damos valor a la suma de los vectores entre tangentes y estado de partícula
 					v1t=Tangent.x*s1.x + Tangent.y*s1.y;
 					v1t2=Tangent2.x*s1.x + Tangent2.z*s1.z;
 					v1t3=Tangent3.z*s1.z + Tangent3.y*s1.y;
 
+					//Coeficiente de choque
 					v1np=(v1n*(ps[i].mass-C*groundMass)+ 0*groundMass*(C+1))/(ps[i].mass+groundMass);
 					
-									
+					//Añadimos al estado del cuerpo (partícula) la velocidad resultante del choque con el plano (rebote)				
 					ps[i].Velocity.x=ContactNormal.x*v1np+ Tangent.x*v1t + Tangent2.x*v1t2 + Tangent3.x*v1t3;
 					ps[i].Velocity.y=ContactNormal.y*v1np+ Tangent.y*v1t + Tangent2.y*v1t2 + Tangent3.y*v1t3;
 					ps[i].Velocity.z=ContactNormal.z*v1np+ Tangent.z*v1t + Tangent2.z*v1t2 + Tangent3.z*v1t3;
