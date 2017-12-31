@@ -42,6 +42,9 @@ bool paused = true;
 //Escena*escena;
 
 
+//Este vector guarda todas las posiciones antiguas de cada particula
+vector<vector<Vector3d>> posParticulas(NumParticulas);
+
 //Dibuja los ejes de coordenadas
 void dibujaEjes(){
 	glLineWidth(1.5f);

@@ -68,12 +68,14 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Help_Functions.cpp" />
+    <ClCompile Include="ParticleRainSystem.cpp" />
     <ClCompile Include="Physics_Functions.cpp" />
     <ClCompile Include="Primitives.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global.h" />
     <ClInclude Include="Help_Functions.h" />
+    <ClInclude Include="ParticleRainSystem.h" />
     <ClInclude Include="Physics_Functions.h" />
     <ClInclude Include="Primitives.h" />
     <ClInclude Include="Includes.h" />

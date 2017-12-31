@@ -197,3 +197,10 @@ void SetColor(COLOR color){
 	}
 }
 //-----------------UTILIDADES---------------------------
+
+GLfloat GetRandomNumber(GLfloat min, GLfloat max)
+{	
+	return min + static_cast <GLfloat> (rand()) / (static_cast <GLfloat> (RAND_MAX / (max - min)));
+}
+
+Vector3d GetGravity() { return Vector3d(0, 9.81f, 0); }

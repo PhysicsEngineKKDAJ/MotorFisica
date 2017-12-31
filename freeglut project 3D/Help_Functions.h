@@ -23,6 +23,9 @@ void CopyParticles(vector<State> & estados, vector<Estrella> & particulas, int s
 
 void CopyStates(State*, Particle3d*, int);//Copia size particulas en estados
 
+//Estos dos métodos sustituyen a los que había en la clase World antigua
+GLfloat GetRandomNumber(GLfloat min, GLfloat max);
+Vector3d GetGravity();
 
 //---Drawing---
 void DrawVector3d(Vector3d & v, double x, double y, double z);//Dibuja una linea desde una posición dada por coordenadas hasta otra dada por un vector

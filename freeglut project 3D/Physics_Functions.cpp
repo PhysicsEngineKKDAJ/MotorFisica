@@ -2,18 +2,13 @@
 
 
 
-
-
-
-
 //VARIABLES GLOBALES DE LA CLASE
 vector<Particle3d> particulas(NumParticulas);
 vector<Estrella> estrellas(NumEstrellas);
 vector<State> estadoParticulas(NumParticulas);
 vector<State> estadoEstrellas(NumEstrellas);
 
-//Este vector guarda todas las posiciones antiguas de cada particula
-vector<vector<Vector3d>> posParticulas(NumParticulas);
+
 
 Vector3d(*acc_func)(State); //acceleration function pointer
 Vector3d ContactNormal; // Vector de la normal cuando dos objetos se colisionan
