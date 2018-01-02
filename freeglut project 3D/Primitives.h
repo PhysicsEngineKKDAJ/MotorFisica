@@ -66,7 +66,7 @@ private:
 
 /*
 --------------------------------------------------------------------------------------
-CLASE OBJECTO3D - CONTIENE TODAS LAS OPERACIONES APLICABLES A UN VECTOR
+       CLASE OBJECTO3D - CONTIENE TODAS LAS OPERACIONES APLICABLES A UN VECTOR
 --------------------------------------------------------------------------------------
 */
 
@@ -93,7 +93,7 @@ public:
 	virtual void dibuja() = 0;
 
 protected:
-	TAfin* mT;//Contiene la matriz por la que es necesario post-multiplicar  la de modelado-vista antes de dibujarlo
+	TAfin* mT;//Contiene la matriz por la que es necesario post-multiplicar la de modelado-vista antes de dibujarlo
 	COLOR color;
 	bool visible;
 	//...

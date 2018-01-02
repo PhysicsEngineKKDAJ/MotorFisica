@@ -1,6 +1,10 @@
-#include "Physics_Functions.h"
+Ôªø#include "Physics_Functions.h"
 
 
+short P_C;
+double b_g = 6.67384*0.000080, s_g; // el 6.67384 es la constante de gravitaci√≥n universal
+const short NumEstrellas = 1000;
+const short NumParticulas = 125;
 
 //VARIABLES GLOBALES DE LA CLASE
 vector<Particle3d> particulas(NumParticulas);
@@ -8,18 +12,14 @@ vector<Estrella> estrellas(NumEstrellas);
 vector<State> estadoParticulas(NumParticulas);
 vector<State> estadoEstrellas(NumEstrellas);
 
-
-
 Vector3d(*acc_func)(State); //acceleration function pointer
 Vector3d ContactNormal; // Vector de la normal cuando dos objetos se colisionan
 Particle3d *P;	//array of particles to reference(p3d or pp3d)
 State *PS;
 
-short P_C;
-double b_g = 6.67384*0.000080, s_g; // el 6.67384 es la constante de gravitaciÛn universal
-const short NumEstrellas = 1000;
-const short NumParticulas = 125;
 
+
+// ‚ô¶_‚ô¶
 Vector3d accUniversalGravitation(State ip)
 {
 	
@@ -260,15 +260,15 @@ void CollisionResolution(int p_c, Particle3d *p, State *ps)
 /*
 ******************************************
 ******************************************
-M…TODOS EN DESUSO
+M√âTODOS EN DESUSO
 ******************************************
 ******************************************
 */
 
 
-/* M…TODO ENCARGADO DE CALCULAR LAS COLISIONES ENTRE UNA PARTÕCULA Y EL PLANO (SUELO) DE LA SIMULACI”N */
+/* M√âTODO ENCARGADO DE CALCULAR LAS COLISIONES ENTRE UNA PART√çCULA Y EL PLANO (SUELO) DE LA SIMULACI√ìN */
 
-//IMPORTANTE: NO SE USA ACTUALMENTE EN LA SIMULACI”N 
+//IMPORTANTE: NO SE USA ACTUALMENTE EN LA SIMULACI√ìN 
 void CollisionResolution_Ground(int p_c, Particle3d *p, State *ps){
 
 	//VARIABLES LOCALES
@@ -286,15 +286,15 @@ void CollisionResolution_Ground(int p_c, Particle3d *p, State *ps){
 
 	for(int i=0; i<p_c; i++)
 		{		
-			//Si la partÌcula ha llegado a una posiciÛn en Y determinada (< -25)
+			//Si la part√≠cula ha llegado a una posici√≥n en Y determinada (< -25)
 			if(ps[i].Position.y<-25)	
 				{
-					//Recalculamos su posiciÛn para dejarla en la posiciÛn lÌmite
+					//Recalculamos su posici√≥n para dejarla en la posici√≥n l√≠mite
 					ps[i].Position.y=-25;
 
 					Vector3d &s1=ps[i].Velocity;
 					
-					//Damos valor a las 3 tangentes para que estÈn acordes al plano
+					//Damos valor a las 3 tangentes para que est√©n acordes al plano
 					Tangent.set(-ContactNormal.y, ContactNormal.x, 0);
 					Tangent2.set(-ContactNormal.z, 0, ContactNormal.x);
 					Tangent3.set(0, -ContactNormal.z, ContactNormal.y);
@@ -302,7 +302,7 @@ void CollisionResolution_Ground(int p_c, Particle3d *p, State *ps){
 					//Suma de las normales del plano
 					v1n=ContactNormal.x*s1.x + ContactNormal.y*s1.y + ContactNormal.z*s1.z;
 
-					//Damos valor a la suma de los vectores entre tangentes y estado de partÌcula
+					//Damos valor a la suma de los vectores entre tangentes y estado de part√≠cula
 					v1t=Tangent.x*s1.x + Tangent.y*s1.y;
 					v1t2=Tangent2.x*s1.x + Tangent2.z*s1.z;
 					v1t3=Tangent3.z*s1.z + Tangent3.y*s1.y;
@@ -310,7 +310,7 @@ void CollisionResolution_Ground(int p_c, Particle3d *p, State *ps){
 					//Coeficiente de choque
 					v1np=(v1n*(ps[i].mass-C*groundMass)+ 0*groundMass*(C+1))/(ps[i].mass+groundMass);
 					
-					//AÒadimos al estado del cuerpo (partÌcula) la velocidad resultante del choque con el plano (rebote)				
+					//A√±adimos al estado del cuerpo (part√≠cula) la velocidad resultante del choque con el plano (rebote)				
 					ps[i].Velocity.x=ContactNormal.x*v1np+ Tangent.x*v1t + Tangent2.x*v1t2 + Tangent3.x*v1t3;
 					ps[i].Velocity.y=ContactNormal.y*v1np+ Tangent.y*v1t + Tangent2.y*v1t2 + Tangent3.y*v1t3;
 					ps[i].Velocity.z=ContactNormal.z*v1np+ Tangent.z*v1t + Tangent2.z*v1t2 + Tangent3.z*v1t3;

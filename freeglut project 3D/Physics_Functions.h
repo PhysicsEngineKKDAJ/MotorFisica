@@ -1,8 +1,7 @@
-#pragma once
+﻿#pragma once
 #include "Includes.h"
 #include "Help_Functions.h"
 #include "Global.h"
-
 
 
 Vector3d accDirectionalGravity(State sip);	//g
@@ -19,7 +18,7 @@ void dImpenetrationResolution(int, int, Particle3d*, State*);
 void CollisionResolution2(int p_c, Particle3d *p, State *ps);
 
 void CollisionResolution(int p_c, Particle3d *p, State *ps);
-void CollisionResolution_Ground(int p_c, Particle3d *p, State *ps);	//EN DESUSO PARA ESTA SIMULACI�N
+void CollisionResolution_Ground(int p_c, Particle3d *p, State *ps);	//EN DESUSO PARA ESTA SIMULACIÓN
 
 //-------------------------------------------
 //-------------------------------------------

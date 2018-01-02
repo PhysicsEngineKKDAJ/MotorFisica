@@ -30,6 +30,9 @@
     <ClCompile Include="ParticleRainSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EscenaOrbitas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global.h">
@@ -48,6 +51,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ParticleRainSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Escena.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EscenaOrbitas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
