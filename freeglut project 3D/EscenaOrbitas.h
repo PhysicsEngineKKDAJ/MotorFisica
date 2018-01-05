@@ -6,13 +6,12 @@
 class EscenaOrbitas : public Escena
 {
 public:
-	EscenaOrbitas();
+	EscenaOrbitas(TEscenas tipoEscena);
 	virtual ~EscenaOrbitas() {};
 
 	virtual void dibuja();
 
 private:
-	
 	//Valores necesarios para el dibuja
 	const double _deltat = 1000;			 //Constante para dividir y que no se vaya de madre
 	const double _G = 6.67384*0.00080;    //Constante que usas en la gravitacion universal
@@ -22,14 +21,27 @@ private:
 	float _velocityDebug = -7;
 	float _accelerationDebug = -7;
 
-	const short _NumParticulas = 125;
+	short _NumParticulas = 125;
+	short _NumEstrellas = 1000;
 
-	//VARIABLES GLOBALES DE LA CLASE
+	//Planetas
 	vector<State> _estadoParticulas;
 	vector <Particle3d> _particulas;
 
-	//Este vector guarda todas las posiciones antiguas de cada particula
+	//Estrellas
+	vector<Estrella> _estrellas;
+	vector<State> _estadoEstrellas;
 
-	//vector<vector<Vector3d>> posParticulas(int);
+	//Recorrido
+	vector<vector<Vector3d>> _posParticulas;
+
+	//Metodos constructores de escenas
+	void createPlanetExample();
+	void createSpiralExample();
+	void createCollisionExample();
+
+	//Metodo auxiliar de los constructores de escena
+	void initParticlesID();
+	void resizeVector();
 };
 

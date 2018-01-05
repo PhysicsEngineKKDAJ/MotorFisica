@@ -5,7 +5,7 @@
 #include "Primitives.h"
 //
 
-const int escena_Max = 2; //ESTO SE CAMBIA SEGÚN METAS LAS ESCENAS
+enum TEscenas{ EEspiral, EColision, EPlanetas, ETAM };
 
 class Escena{
 public:
@@ -16,7 +16,7 @@ public:
 		_shor = 0;
 		_sdepth = 20;
 	};
-	~Escena() {};
+	virtual ~Escena() {};
 
 	virtual void dibuja(){
 
@@ -57,8 +57,14 @@ public:
 
 	//-----------------ROTACION DE ESCENA----------------
 
-	void leftArrowActivate(bool b) { flechaIz = b; }
-	void rightArrowActivate(bool b) { flechaDe = b; }
+	inline void leftArrowActivate(bool b) { flechaIz = b; }
+	inline void rightArrowActivate(bool b) { flechaDe = b; }
+
+	inline bool getXActivate() const { return xActivate; }
+	inline bool getZActivate() const { return zActivate; }
+
+	inline void zSetActivate(bool a) { zActivate = a; }
+	inline void xSetActivate(bool a) { xActivate = a; }
 
 protected:
 	//Parámetros iniciales de esta escena
@@ -67,4 +73,6 @@ protected:
 	int _downX, _downY;
 
 	bool flechaIz = false ,flechaDe = false;
+	//Controles extra 
+	bool zActivate = false, xActivate = false;
 };

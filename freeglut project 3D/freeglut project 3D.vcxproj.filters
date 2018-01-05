@@ -13,51 +13,66 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Escenas">
+      <UniqueIdentifier>{b792e6bf-ae5c-46ed-b967-430a396523b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Escenas">
+      <UniqueIdentifier>{6aa2dc23-c218-40c8-9964-e3fc8d16f606}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Funciones de ayuda">
+      <UniqueIdentifier>{53a484d9-e6ac-45d8-8dfa-455f0d3312d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Funciones de ayuda">
+      <UniqueIdentifier>{a5cc0af9-a73f-4f65-af5a-1917bc7bc7ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Objetos">
+      <UniqueIdentifier>{99a97b89-0c5d-4c9f-ab94-9fa76852a745}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objetos">
+      <UniqueIdentifier>{f3b65b3f-c59a-4b05-ad36-94e9526646d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Physics_Functions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Help_Functions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Primitives.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleRainSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="EscenaOrbitas.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Escenas</Filter>
+    </ClCompile>
+    <ClCompile Include="Help_Functions.cpp">
+      <Filter>Source Files\Funciones de ayuda</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics_Functions.cpp">
+      <Filter>Source Files\Funciones de ayuda</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitives.cpp">
+      <Filter>Source Files\Objetos</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleRainSystem.cpp">
+      <Filter>Source Files\Objetos</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Global.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics_Functions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Help_Functions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Primitives.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Includes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleRainSystem.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="EscenaOrbitas.h">
+      <Filter>Header Files\Escenas</Filter>
     </ClInclude>
     <ClInclude Include="Escena.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Escenas</Filter>
     </ClInclude>
-    <ClInclude Include="EscenaOrbitas.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Help_Functions.h">
+      <Filter>Header Files\Funciones de ayuda</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics_Functions.h">
+      <Filter>Header Files\Funciones de ayuda</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitives.h">
+      <Filter>Header Files\Objetos</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleRainSystem.h">
+      <Filter>Header Files\Objetos</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -33,13 +33,10 @@ bool leftArrow = false, rightArrow = false;
 //---------------CONTROLES---------------------
 
 bool paused = true;
-//HAY QUE USARLO
-//int contEscena;
-//Escena*escena;
+
 Escena * escena;
 
-//Este vector guarda todas las posiciones antiguas de cada particula
-vector<vector<Vector3d>> posParticulas(NumParticulas);
+TEscenas estado;
 
 //Dibuja los ejes de coordenadas
 void dibujaEjes(){
@@ -64,7 +61,8 @@ void dibujaEjes(){
 //CREA TODOS LOS OBJETOS DE LA ESCENA
 void buildSceneObjects()
 {
-	escena = new EscenaOrbitas();
+	estado = EEspiral;
+	escena = new EscenaOrbitas(estado);
 	//escena = new Escena(4000);
 	//contEscena = 0;
 
@@ -135,18 +133,7 @@ void display()
 
 	glPushMatrix();
 
-
 	escena->dibuja();
-	/*
-	switch (contEscena)
-	{
-	case 0: test1.dibuja(); break;
-	case 1: testRB1.dibuja(); break;
-
-	default:
-	break;
-
-	}*/
 
 	dibujaEjes();
 
@@ -243,6 +230,36 @@ void key(unsigned char key, int x, int y){
 		break;
 	case 's':
 		lightPos[1] -= 0.1;
+		break;
+
+		//z y x en cada una de las escenas se utiliza de forma diferente
+	case 'z':
+		escena->zSetActivate(!escena->getZActivate());
+		break;
+
+	case 'x':
+		escena->xSetActivate(!escena->getXActivate());
+		break;
+
+	case '1':
+		estado = EEspiral;
+		delete escena;
+		escena = new EscenaOrbitas(estado);
+		leftArrow = rightArrow = false;
+		break;
+
+	case '2':
+		estado = EPlanetas;
+		delete escena;
+		escena = new EscenaOrbitas(estado);
+		leftArrow = rightArrow = false;
+		break;
+
+	case '3':
+		estado = EColision;
+		delete escena;
+		escena = new EscenaOrbitas(estado);
+		leftArrow = rightArrow = false;
 		break;
 
 	default:

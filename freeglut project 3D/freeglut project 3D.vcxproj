@@ -76,7 +76,6 @@
   <ItemGroup>
     <ClInclude Include="Escena.h" />
     <ClInclude Include="EscenaOrbitas.h" />
-    <ClInclude Include="Global.h" />
     <ClInclude Include="Help_Functions.h" />
     <ClInclude Include="ParticleRainSystem.h" />
     <ClInclude Include="Physics_Functions.h" />
