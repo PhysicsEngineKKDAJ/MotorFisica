@@ -66,6 +66,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EscenaOrbitas.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Help_Functions.cpp" />
     <ClCompile Include="ParticleRainSystem.cpp" />
@@ -73,6 +74,8 @@
     <ClCompile Include="Primitives.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Escena.h" />
+    <ClInclude Include="EscenaOrbitas.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="Help_Functions.h" />
     <ClInclude Include="ParticleRainSystem.h" />
