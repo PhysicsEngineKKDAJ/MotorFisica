@@ -1,7 +1,6 @@
 #pragma once
 #include "Escena.h"
 
-//const short NumParticulas = 125;
 
 class EscenaOrbitas : public Escena
 {
@@ -21,19 +20,19 @@ private:
 	float _velocityDebug = -7;
 	float _accelerationDebug = -7;
 
-	short _NumParticulas = 125;
-	short _NumEstrellas = 1000;
+	short _NumPlanetas;
+	short _NumEstrellas;
 
 	//Planetas
-	vector<State> _estadoParticulas;
-	vector <Particle3d> _particulas;
+	vector<State> _estadoPlanetas;
+	vector <Planetas3D> _planetas;
 
 	//Estrellas
 	vector<Estrella> _estrellas;
 	vector<State> _estadoEstrellas;
 
 	//Recorrido
-	vector<vector<Vector3d>> _posParticulas;
+	vector<vector<Vector3d>> _posPlanetas;
 
 	//Metodos constructores de escenas
 	void createPlanetExample();

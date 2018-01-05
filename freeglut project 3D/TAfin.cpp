@@ -1,7 +1,4 @@
-#include"Primitives.h"
-#include "Help_Functions.h"
-
-
+#include "TAfin.h"
 
 TAfin::TAfin()
 {
@@ -12,9 +9,6 @@ TAfin::TAfin()
 	m[0] = m[5] = m[10] = m[15] = 1;//LA IDENTIDAD
 	//...
 }
-
-
-
 
 void TAfin::reset(){
 	for (int i = 0; i < 16; i++) m[i] = 0;
@@ -73,61 +67,4 @@ void TAfin::postMultiplica(GLfloat* m1) {
 	//Dejar el resultado en m
 	glGetFloatv(GL_MODELVIEW_MATRIX, m);
 	glPopMatrix();
-}
-
-Particle3d::Particle3d(Vector3d p, GLfloat maxVida, GLfloat minVida){
-	position = p;
-	velocity = Vector3d(0, 0, 0);
-	acceleration = GetGravity();
-	seconds_ = glutGet(GLUT_ELAPSED_TIME);
-	//life_ = lifeAct_ = GetRandomNumber(minVida, maxVida);
-	//size_ = 1;
-}
-void Particle3d::dibuja()
-{
-	glPushMatrix();
-
-	glTranslatef(position.x, position.y, position.z);
-	SetColor(G75);
-	glutSolidSphere(radius, 40, 40);
-
-	glPopMatrix();
-
-}
-
-void Particle3d::update(GLfloat dt) {
-	dt -= seconds_;
-	dt /= 10000;
-
-	Vector3d aceleration = acceleration;
-	aceleration.operator*=(dt);
-
-	velocity.operator+=(aceleration);
-
-	Vector3d Velocidad = velocity;
-	Velocidad.operator*=(dt);
-
-	position.operator+=(Velocidad);
-
-	/*lifeAct_--;
-	if (position.getY() <= DeadTriggerDown || position.getY() >= DeadTriggerUp || lifeAct_ <= 0)
-		setDestroy(true);*/
-
-
-}
-//Producto escalar
-GLfloat Vector3d::productoEscalar(Vector3d* vector) {
-	return x*vector->getX() +
-		y*vector->getY() +
-		z*vector->getZ();
-}
-//Producto Vectorial
-Vector3d* Vector3d::productoVectorial(Vector3d* v) {
-	GLfloat resx = 0;
-	GLfloat resy = 0;
-	GLfloat resz = 0;
-	resx = this->y*v->z - v->y*this->z;
-	resy = this->z*v->x - v->z*this->x;
-	resz = this->x*v->y - v->x*this->y;
-	return new Vector3d(resx, resy, resz);
 }

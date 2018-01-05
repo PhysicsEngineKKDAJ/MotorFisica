@@ -1,10 +1,9 @@
 #pragma once
 
 #include "Includes.h"
-#include "Primitives.h"
+#include "Planetas3D.h"
 
-
-//METODOS DE AYUDA PARA VECTORES, PARTICULAS Y DEBUG
+//METODOS DE AYUDA PARA VECTORES, planetas Y DEBUG
 
 
 //---Vector Operations---
@@ -13,15 +12,15 @@ double dotProduct(Vector3d& v1, Vector3d& v2);
 //---Particle3d---
 
 //Crea un tipo de partículas según el preset
-void InitParticles(vector<Particle3d> & particulas, int size, Preset preset);
-void InitParticles(vector<Estrella> & particulas, int size, Preset preset);
+void InitPlanets(vector<Planetas3D> & planetas, int size, Preset preset);
+void InitPlanets(vector<Estrella> & planetas, int size, Preset preset);
 
-State ParticleToState(Particle3d & particula);//Devuelvo un estado con los atributos de la partícula atributo
+State PlanetToState(Planetas3D & planeta);//Devuelvo un estado con los atributos de la partícula atributo
 
-void CopyParticles(vector<State> & estados, vector<Particle3d> & particulas, int size);
-void CopyParticles(vector<State> & estados, vector<Estrella> & particulas, int size);
+void CopyPlanets(vector<State> & estados, vector<Planetas3D> & planetas, int size);
+void CopyPlanets(vector<State> & estados, vector<Estrella> & planetas, int size);
 
-void CopyStates(State*, Particle3d*, int);//Copia size particulas en estados
+void CopyStates(State*, Planetas3D*, int);//Copia size planetas en estados
 
 //Estos dos métodos sustituyen a los que había en la clase World antigua
 GLfloat GetRandomNumber(GLfloat min, GLfloat max);

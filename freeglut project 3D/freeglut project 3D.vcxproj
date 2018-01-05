@@ -69,18 +69,27 @@
     <ClCompile Include="EscenaOrbitas.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Help_Functions.cpp" />
+    <ClCompile Include="Particle3D.cpp" />
+    <ClCompile Include="Planetas3D.cpp" />
     <ClCompile Include="ParticleRainSystem.cpp" />
     <ClCompile Include="Physics_Functions.cpp" />
-    <ClCompile Include="Primitives.cpp" />
+    <ClCompile Include="TAfin.cpp" />
+    <ClCompile Include="TestParticles.cpp" />
+    <ClCompile Include="Vector3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Escena.h" />
     <ClInclude Include="EscenaOrbitas.h" />
     <ClInclude Include="Help_Functions.h" />
+    <ClInclude Include="Objeto3D.h" />
+    <ClInclude Include="Particle3D.h" />
+    <ClInclude Include="Planetas3D.h" />
     <ClInclude Include="ParticleRainSystem.h" />
     <ClInclude Include="Physics_Functions.h" />
-    <ClInclude Include="Primitives.h" />
     <ClInclude Include="Includes.h" />
+    <ClInclude Include="TAfin.h" />
+    <ClInclude Include="TestParticles.h" />
+    <ClInclude Include="Vector3D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

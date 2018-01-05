@@ -8,6 +8,7 @@
 #include "Physics_Functions.h"
 #include "Escena.h"
 #include "EscenaOrbitas.h"
+#include "TestParticles.h"
 //--------------CAMARA-------------
 
 //N Y F son 0 por el gluPerspective
@@ -61,8 +62,8 @@ void dibujaEjes(){
 //CREA TODOS LOS OBJETOS DE LA ESCENA
 void buildSceneObjects()
 {
-	estado = EEspiral;
-	escena = new EscenaOrbitas(estado);
+	estado = EParticles;
+	escena = new TestParticles();
 	//escena = new Escena(4000);
 	//contEscena = 0;
 
@@ -259,6 +260,13 @@ void key(unsigned char key, int x, int y){
 		estado = EColision;
 		delete escena;
 		escena = new EscenaOrbitas(estado);
+		leftArrow = rightArrow = false;
+		break;
+
+	case '4':
+		estado = EParticles;
+		delete escena;
+		escena = new TestParticles();
 		leftArrow = rightArrow = false;
 		break;
 

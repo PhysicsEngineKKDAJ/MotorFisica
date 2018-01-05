@@ -31,6 +31,18 @@
     <Filter Include="Source Files\Objetos">
       <UniqueIdentifier>{f3b65b3f-c59a-4b05-ad36-94e9526646d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Objetos\ObjetosCompuestos">
+      <UniqueIdentifier>{e1b04766-e9a4-4b4b-b9bc-0bb8e48891ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objetos\ObjetosCompuestos">
+      <UniqueIdentifier>{6b57fb40-6319-411a-b769-7260d8bd054f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Math">
+      <UniqueIdentifier>{f5565893-93d8-4505-bc2f-476fb4aea8e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Math">
+      <UniqueIdentifier>{c3413f83-b09d-4c08-9b3e-e091424a19cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -45,10 +57,22 @@
     <ClCompile Include="Physics_Functions.cpp">
       <Filter>Source Files\Funciones de ayuda</Filter>
     </ClCompile>
-    <ClCompile Include="Primitives.cpp">
+    <ClCompile Include="Vector3D.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="TAfin.cpp">
       <Filter>Source Files\Objetos</Filter>
     </ClCompile>
+    <ClCompile Include="Planetas3D.cpp">
+      <Filter>Source Files\Objetos</Filter>
+    </ClCompile>
+    <ClCompile Include="TestParticles.cpp">
+      <Filter>Source Files\Escenas</Filter>
+    </ClCompile>
     <ClCompile Include="ParticleRainSystem.cpp">
+      <Filter>Source Files\Objetos</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle3D.cpp">
       <Filter>Source Files\Objetos</Filter>
     </ClCompile>
   </ItemGroup>
@@ -68,7 +92,22 @@
     <ClInclude Include="Physics_Functions.h">
       <Filter>Header Files\Funciones de ayuda</Filter>
     </ClInclude>
-    <ClInclude Include="Primitives.h">
+    <ClInclude Include="Objeto3D.h">
+      <Filter>Header Files\Objetos</Filter>
+    </ClInclude>
+    <ClInclude Include="TAfin.h">
+      <Filter>Header Files\Objetos</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3D.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Planetas3D.h">
+      <Filter>Header Files\Objetos</Filter>
+    </ClInclude>
+    <ClInclude Include="TestParticles.h">
+      <Filter>Header Files\Escenas</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle3D.h">
       <Filter>Header Files\Objetos</Filter>
     </ClInclude>
     <ClInclude Include="ParticleRainSystem.h">

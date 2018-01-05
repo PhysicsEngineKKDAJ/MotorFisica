@@ -8,7 +8,8 @@ muriendo a los pocos segundos.
 */
 
 //#include "Objeto3DFisico.h"
-#include "Primitives.h"
+
+#include "Particle3D.h"
 #include "Help_Functions.h"
 #include <list>
 
@@ -21,14 +22,15 @@ public:
 	virtual void dibuja();							// Viene de Objeto3D. Dibuja el vector.
 	virtual void update(GLfloat dt);					//Update de las particulas: Determina su pos y vida.
 
-	Particle3d *createParticle();					//Creadora dinámica de partículas
+	Particle3D *createParticle();					//Creadora dinámica de partículas
 
 private:
-	std::list<Particle3d*> particles;			//lista de partículas
+	std::list<Particle3D*> particles;			//lista de partículas
 
 	GLfloat radius_; //Radio de las partículas
 	const int NumMaxParticles = 400;
 	const int ParticlesPerTick = 10;
 	Vector3d pos_;
 };
+
 #endif

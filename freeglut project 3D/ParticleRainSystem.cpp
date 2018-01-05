@@ -9,7 +9,7 @@ ParticleRainSystem::ParticleRainSystem(Vector3d pos, GLfloat r)
 
 ParticleRainSystem::~ParticleRainSystem()
 {
-	std::list<Particle3d*>::iterator it = particles.begin();
+	std::list<Particle3D*>::iterator it = particles.begin();
 
 	while (!particles.empty())
 	{
@@ -20,7 +20,7 @@ ParticleRainSystem::~ParticleRainSystem()
 }
 void ParticleRainSystem::update(GLfloat deltaTime)
 {
-	std::list<Particle3d*>::iterator it = particles.begin();
+	std::list<Particle3D*>::iterator it = particles.begin();
 
 	while (!particles.empty() && it != particles.end())
 	{
@@ -28,9 +28,9 @@ void ParticleRainSystem::update(GLfloat deltaTime)
 
 
 		//Limpia las partículas muertas
-		/*if ((*it)->getDestroy())
+		if ((*it)->getDestroy())
 			it = particles.erase(it);
-		else*/
+		else
 
 			++it;
 	}
@@ -48,7 +48,7 @@ Constructora dinámica de partículas. Asigna una posicion inicial, un color y la 
 Le da también un puntero al mundo en el que existe.
 Y la devuelve.
 */
-Particle3d* ParticleRainSystem::createParticle()
+Particle3D* ParticleRainSystem::createParticle()
 {
 	//Aleatoriedad de la particula
 	GLfloat ang = GetRandomNumber(0, 360);
@@ -56,24 +56,24 @@ Particle3d* ParticleRainSystem::createParticle()
 	GLfloat alt = GetRandomNumber(150, 250);
 	int randomColor = GetRandomNumber(0, 5);
 
-	Particle3d *p = new Particle3d(Vector3d(pos_.getX() + random * cos(ang), alt, pos_.getZ() + random * sin(ang)), 100, 300);
+	Particle3D *p = new Particle3D(Vector3d(pos_.getX() + random * cos(ang), alt, pos_.getZ() + random * sin(ang)), 100, 300);
 
 	switch (randomColor)
 	{
 	case 0:
-		SetColor(COLOR::WHITE);			//BLANCO
+		p->setColor(Color{ 1, 1, 1, 1 });			//BLANCO
 		break;
 	case 1:
-		SetColor(COLOR::RED);			//ROJO
+		p->setColor(Color{ 1, 0, 0, 1 });			//ROJO
 		break;
 	case 2:
-		SetColor(COLOR::BLUE);			//AZUL
+		p->setColor(Color{ 0, 0, 1, 1 });			//AZUL
 		break;
 	case 3:
-		SetColor(COLOR::GREEN);			//VERDE
+		p->setColor(Color{ 0, 1, 0, 1 });			//VERDE
 		break;
 	case 4:
-		SetColor(COLOR::YELLOW);		//AMARILLO
+		p->setColor(Color{ 1, 0.4, 1, 1 });			//ROSA
 		break;
 
 	default:
@@ -86,7 +86,7 @@ Particle3d* ParticleRainSystem::createParticle()
 void ParticleRainSystem::dibuja() {
 	if (!particles.empty())
 	{
-		std::list<Particle3d*>::iterator it = particles.begin();
+		std::list<Particle3D*>::iterator it = particles.begin();
 
 		while (!particles.empty() && it != particles.end())
 		{

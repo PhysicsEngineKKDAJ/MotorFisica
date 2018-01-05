@@ -1,7 +1,7 @@
 #include "Physics_Functions.h"
 
 //No se eliminar estas variables globales
-Particle3d *P;	//array of particles to reference(p3d or pp3d)
+Planetas3D *P;	//array of particles to reference(p3d or pp3d)
 short P_C;
 
 
@@ -47,7 +47,7 @@ Derivative evaluate(int ip, Vector3d(*acc_func)(State) )
 {
 	Derivative output;
 	output.dPosition = P[ip].velocity ;
-	output.dVelocity = acc_func(ParticleToState(P[ip])); //arbitrary acceleration function
+	output.dVelocity = acc_func(PlanetToState(P[ip])); //arbitrary acceleration function
 
 	return output;
 }
@@ -70,7 +70,7 @@ Derivative evaluate(int ip, float dt, Derivative &d, Vector3d(*acc_func)(State))
 }
 
 //SE USA CUANDO PULSAS CLICK IZQUIERDO
-void DirectionalGravity(int ip, Particle3d* p , short p_c, State& fstate, float dt)
+void DirectionalGravity(int ip, Planetas3D* p, short p_c, State& fstate, float dt)
 {
 	P = p;
 	P_C = p_c;
@@ -92,7 +92,7 @@ void DirectionalGravity(int ip, Particle3d* p , short p_c, State& fstate, float 
 }
 
 // Solo tiene una diferencia con el metodo anterior
-void UniversalGravitation(int ip, Particle3d* p, short p_c, State& fstate , float dt, double G )
+void UniversalGravitation(int ip, Planetas3D* p, short p_c, State& fstate, float dt, double G)
 {
 	P = p;
 	P_C = p_c;
@@ -119,7 +119,7 @@ void UniversalGravitation(int ip, Particle3d* p, short p_c, State& fstate , floa
 
 
 // Se utiliza cuando va a colisionar un objeto con otro
-void dImpenetrationResolution(int i, int j, Particle3d *p, State *ps, Vector3d ContactNormal)
+void dImpenetrationResolution(int i, int j, Planetas3D *p, State *ps, Vector3d ContactNormal)
 {
 	// Comprueba si las particulas estan separadas, solapadas o pegandose.
 	// Es como una zona muerta
@@ -141,7 +141,7 @@ void dImpenetrationResolution(int i, int j, Particle3d *p, State *ps, Vector3d C
 	ps[j].Position += mv * (1 / (p[j].mass+vm2));				
 }
 
-void CollisionResolution(int p_c, Particle3d *p, State *ps)
+void CollisionResolution(int p_c, Planetas3D *p, State *ps)
 {
 	double C = 0.60;
 	Vector3d Normal;

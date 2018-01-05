@@ -2,10 +2,10 @@
 
 //Includes comunes de las escenas
 #include "Includes.h"
-#include "Primitives.h"
+#include "Planetas3D.h"
 //
 
-enum TEscenas{ EEspiral, EColision, EPlanetas, ETAM };
+enum TEscenas{ EEspiral, EColision, EPlanetas, EParticles,ETAM };
 
 class Escena{
 public:

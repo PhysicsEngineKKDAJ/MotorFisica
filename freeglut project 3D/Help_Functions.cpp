@@ -12,7 +12,7 @@ double dotProduct(Vector3d& v1, Vector3d& v2){
 //-----------------PARTICLE3D OPERATIONS-------------------------
 
 //Crea un tipo de partículas segun el preset
-void InitParticles(vector<Particle3d> & particulas, int size, Preset preset)
+void InitPlanets(vector<Planetas3D> & planetas, int size, Preset preset)
 {
 	switch (preset)
 	{
@@ -20,7 +20,7 @@ void InitParticles(vector<Particle3d> & particulas, int size, Preset preset)
 	case Preset_id:
 
 		for (int i = 0; i<size; i++)
-			particulas[i].id = i;
+			planetas[i].id = i;
 
 		break;
 
@@ -28,21 +28,21 @@ void InitParticles(vector<Particle3d> & particulas, int size, Preset preset)
 	case Preset_random_m:
 
 		for (int i = 0; i<size; i++)
-			particulas[i].mass = 2000.0*(rand() % 1000 + 0.001);
+			planetas[i].mass = 2000.0*(rand() % 1000 + 0.001);
 		break;
 
 		//Partículas con un radio en función de la masa
 	case Preset_radius:
 
 		for (int i = 0; i<size; i++)
-			particulas[i].radius = 0.75 + 0 * particulas[i].mass / (75 * pow(10.0, 10));
+			planetas[i].radius = 0.75 + 0 * planetas[i].mass / (75 * pow(10.0, 10));
 		break;
 
 		//Partículas con una velocidad aleatoria
 	case Preset_random_v:
 
 		for (int i = 0; i<size; i++)
-			particulas[i].velocity = Vector3d((rand() % 1000 - 500) / 100.0, (rand() % 1000 - 500) / 100.0, (rand() % 1000 - 500) / 100.0);
+			planetas[i].velocity = Vector3d((rand() % 1000 - 500) / 100.0, (rand() % 1000 - 500) / 100.0, (rand() % 1000 - 500) / 100.0);
 		break;
 
 	default:
@@ -50,7 +50,7 @@ void InitParticles(vector<Particle3d> & particulas, int size, Preset preset)
 	}
 }
 
-void InitParticles(vector<Estrella> & particulas, int size, Preset preset)
+void InitPlanets(vector<Estrella> & planetas, int size, Preset preset)
 {
 	switch (preset)
 	{
@@ -58,7 +58,7 @@ void InitParticles(vector<Estrella> & particulas, int size, Preset preset)
 	case Preset_id:
 
 		for (int i = 0; i<size; i++)
-			particulas[i].id = i;
+			planetas[i].id = i;
 
 		break;
 
@@ -66,21 +66,21 @@ void InitParticles(vector<Estrella> & particulas, int size, Preset preset)
 	case Preset_random_m:
 
 		for (int i = 0; i<size; i++)
-			particulas[i].mass = 2000.0*(rand() % 1000 + 0.001);
+			planetas[i].mass = 2000.0*(rand() % 1000 + 0.001);
 		break;
 
 		//Partículas con un radio en función de la masa
 	case Preset_radius:
 
 		for (int i = 0; i<size; i++)
-			particulas[i].radius = 0.75 + 0 * particulas[i].mass / (75 * pow(10.0, 10));
+			planetas[i].radius = 0.75 + 0 * planetas[i].mass / (75 * pow(10.0, 10));
 		break;
 
 		//Partículas con una velocidad aleatoria
 	case Preset_random_v:
 
 		for (int i = 0; i<size; i++)
-			particulas[i].velocity = Vector3d((rand() % 1000 - 500) / 100.0, (rand() % 1000 - 500) / 100.0, (rand() % 1000 - 500) / 100.0);
+			planetas[i].velocity = Vector3d((rand() % 1000 - 500) / 100.0, (rand() % 1000 - 500) / 100.0, (rand() % 1000 - 500) / 100.0);
 		break;
 
 	default:
@@ -89,34 +89,35 @@ void InitParticles(vector<Estrella> & particulas, int size, Preset preset)
 }
 
 //Devuelvo un estado con los atributos de la partícula atributo
-State ParticleToState(Particle3d& particula){
+State PlanetToState(Planetas3D& planeta){
 
 	State STATE;
-	STATE.id = particula.id;
-	STATE.mass = particula.mass;
-	STATE.Position = particula.position;
-	STATE.Velocity = particula.velocity;
+	STATE.id = planeta.id;
+	STATE.mass = planeta.mass;
+	STATE.Position = planeta.position;
+	STATE.Velocity = planeta.velocity;
 	return STATE;
 }
 
 //Copia size estados en particulas
-void CopyParticles(vector<State> & estados, vector<Particle3d> & particulas, int size){
+void CopyPlanets(vector<State> & estados, vector<Planetas3D> & planeta, int size){
 	for (int i = 0; i<size; i++)
-		estados[i] = ParticleToState(particulas[i]);
+		estados[i] = PlanetToState(planeta[i]);
 }
 
-void CopyParticles(vector<State> & estados, vector<Estrella> & particulas, int size){
+void CopyPlanets(vector<State> & estados, vector<Estrella> & planeta, int size){
 	for (int i = 0; i<size; i++)
-		estados[i] = ParticleToState(particulas[i]);
+		estados[i] = PlanetToState(planeta[i]);
 }
 
 //Copia size particulas en estados
-void CopyStates(State* estados, Particle3d* particulas, int size){
+void CopyStates(State* estados, Planetas3D* planeta, int size){
 	for (int i = 0; i<size; i++)
 	{
-		particulas[i].position = estados[i].Position;
-		particulas[i].velocity = estados[i].Velocity;
-		particulas[i].acceleration = estados[i].Acceleration;
+		planeta[i].getmT()->posiciona(estados[i].Position.x, estados[i].Position.y, estados[i].Position.z);
+		planeta[i].position = estados[i].Position;
+		planeta[i].velocity = estados[i].Velocity;
+		planeta[i].acceleration = estados[i].Acceleration;
 	}
 }
 
@@ -203,4 +204,4 @@ GLfloat GetRandomNumber(GLfloat min, GLfloat max)
 	return min + static_cast <GLfloat> (rand()) / (static_cast <GLfloat> (RAND_MAX / (max - min)));
 }
 
-Vector3d GetGravity() { return Vector3d(0, 9.81f, 0); }
+Vector3d GetGravity() { return Vector3d(0, -9.81f, 0); }

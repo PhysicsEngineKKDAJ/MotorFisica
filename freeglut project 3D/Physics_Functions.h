@@ -7,13 +7,13 @@
 Vector3d accDirectionalGravity(State sip);	//g
 Vector3d accUniversalGravitation(State sip); //G
 
-void DirectionalGravity(int, Particle3d*, short, State&, float);
+void DirectionalGravity(int, Planetas3D*, short, State&, float);
 
-void UniversalGravitation(int, Particle3d*, short, State&, float, double);
+void UniversalGravitation(int, Planetas3D*, short, State&, float, double);
 
-void dImpenetrationResolution(int, int, Particle3d*, State*, Vector3d ContactNormal);
+void dImpenetrationResolution(int, int, Planetas3D*, State*, Vector3d ContactNormal);
 
-void CollisionResolution(int p_c, Particle3d *p, State *ps);
+void CollisionResolution(int p_c, Planetas3D *p, State *ps);
 
 //-------------------------------------------
 //-------------------------------------------
